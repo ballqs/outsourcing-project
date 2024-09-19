@@ -10,6 +10,7 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
     @Query("SELECT SUM(c.menuPrice * c.cnt) FROM CartDetail c where c.cart.id = :cardId")
     int getSumAmt(Long cardId);
     List<CartDetail> findAllByCartId(Long cartId);
+    int countByCartId(Long cartId);
 
     default CartDetail findByIdOrElseThrow(Long cartDetailId) {
         return findById(cartDetailId).orElseThrow(() -> new IllegalArgumentException("장바구니 상세 정보가 없습니다."));

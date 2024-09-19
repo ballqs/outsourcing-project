@@ -1,14 +1,19 @@
 package org.sparta.outsourcingproject.domain.order.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum OrdersProcessEnum {
-    ORDER("ORDER"),         // 주문 후
-    APPROVED("APPROVED"),       // 승인
-    IN_DELIVERY("IN_DELIVERY"), // 배달 중
-    DELIVERED("DELIVERED");     // 배달 완료
+    ORDER(1,"ORDER"),               // 주문 후
+    APPROVED(2,"APPROVED"),         // 승인
+    IN_DELIVERY(3,"IN_DELIVERY"),   // 배달 중
+    DELIVERED(4,"DELIVERED");       // 배달 완료
 
     private String status;
+    private int seq;
 
-    OrdersProcessEnum(String status) {
+    OrdersProcessEnum(int seq , String status) {
+        this.seq = seq;
         this.status = status;
     }
 }

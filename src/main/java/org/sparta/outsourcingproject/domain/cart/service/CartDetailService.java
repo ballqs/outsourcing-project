@@ -32,4 +32,8 @@ public class CartDetailService {
     public List<CartDetail> getAllCartDetails(Long cartId) {
         return cartDetailRepository.findAllByCartId(cartId);
     }
+
+    public int countCartDetail(Long cartId) {
+        return cartDetailRepository.countByCartId(cartId);
+    }
 }
