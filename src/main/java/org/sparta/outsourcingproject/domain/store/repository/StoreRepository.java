@@ -1,4 +1,6 @@
 package org.sparta.outsourcingproject.domain.store.repository;
 
-public class StoreRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StoreRepository extends JpaRepository {
 }
