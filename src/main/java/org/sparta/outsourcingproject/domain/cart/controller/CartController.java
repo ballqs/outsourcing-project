@@ -41,7 +41,7 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<ResponseDto<CartResponseSelectDto>> getCarts(@Auth AuthUser authUser) {
-        return ResponseEntity.ok(new ResponseDto<>(200 , cartService.getCarts(authUser.getUserId()) , "조회가 완료되었습니다."));
+        return ResponseEntity.ok(new ResponseDto<>(200 , cartService.getCarts(authUser.getUserId()) , "조회되었습니다."));
     }
 
     @PostMapping("/order-complete")

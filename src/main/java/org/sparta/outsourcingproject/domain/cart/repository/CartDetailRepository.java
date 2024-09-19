@@ -12,7 +12,7 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
     List<CartDetail> findAllByCartId(Long cartId);
     int countByCartId(Long cartId);
 
-    default CartDetail findByIdOrElseThrow(Long cartDetailId) {
+    default CartDetail findByIdOrThrow(Long cartDetailId) {
         return findById(cartDetailId).orElseThrow(() -> new IllegalArgumentException("장바구니 상세 정보가 없습니다."));
     }
 }

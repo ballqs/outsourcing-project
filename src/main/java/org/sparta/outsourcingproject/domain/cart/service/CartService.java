@@ -5,14 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.domain.cart.dto.*;
 import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.cart.entity.CartDetail;
+import org.sparta.outsourcingproject.domain.cart.java.CartDetailEvent;
 import org.sparta.outsourcingproject.domain.cart.repository.CartRepository;
-import org.sparta.outsourcingproject.domain.order.service.OrderDetailService;
 import org.sparta.outsourcingproject.domain.order.service.OrdersService;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +24,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartDetailService cartDetailService;
     private final OrdersService ordersService;
-    private final OrderDetailService orderDetailService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public void createCart(CartRequestInsertDto cartRequestInsertDto) {
@@ -59,7 +59,8 @@ public class CartService {
 
         Cart saveCart = cartRepository.save(cart);
 
-        cartDetailService.saveCartDetail(new CartDetail(saveCart , menuId , menuName , menuPrice , cnt));
+        CartDetail cartDetail = new CartDetail(saveCart , menuId , menuName , menuPrice , cnt);
+        eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
     }
 
     // @transactionaleventlistener 공부해서 적용하기
@@ -79,7 +80,7 @@ public class CartService {
 
         // 2.cartDetail 테이블 update
         cartDetail.update(menuId , menuName , menuPrice , cnt);
-        cartDetailService.saveCartDetail(cartDetail);
+        eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
     }
 
     @Transactional

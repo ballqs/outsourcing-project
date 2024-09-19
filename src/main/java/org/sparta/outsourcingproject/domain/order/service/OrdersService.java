@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.cart.service.CartDetailService;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
+import org.sparta.outsourcingproject.domain.order.entity.OrdersProcessEnum;
 import org.sparta.outsourcingproject.domain.order.repository.OrdersRepository;
 import org.sparta.outsourcingproject.domain.user.entity.User;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,37 @@ public class OrdersService {
         // User user = userService.findById(userId);
         User user = new User();
 
+        // ORDER 로 default 설정
         Orders orders = new Orders();
 
         Orders saveOrder = ordersRepository.save(orders);
         orderDetailService.orderComplete(saveOrder , cartDetailService.getAllCartDetails(cart.getId()));
+    }
+
+    public void changeStatus(Long userId , Long orderId) {
+        // 접근한 유저가 해당 주문을 받은 가게의 담당자와 일치하는지 검증!
+        Orders orders = ordersRepository.findByIdOrThrow(orderId);
+//        if (userId.equals(orders.user.getUserId())) {
+        if (userId.equals(orders.getUserId())) {
+            throw new IllegalArgumentException("니 가게 아님");
+        }
+
+        // 주문 다음 상태로 이행 작업
+        OrdersProcessEnum ordersProcessEnum = orders.getOrdersProcess();
+        switch(ordersProcessEnum) {
+            case ORDER:
+                // 최소 주문 금액을 넘었는지?
+                break;
+            case APPROVED:
+                // 단순 배달로 이행할지?
+                break;
+            case IN_DELIVERY:
+                // 단순 배달 완료 처리 할지?
+                break;
+            default:
+                throw new IllegalArgumentException("이미 배달완료된 건입니다.");
+        }
+        ordersProcessEnum = OrdersProcessEnum.values()[ordersProcessEnum.getSeq()];
+
     }
 }
