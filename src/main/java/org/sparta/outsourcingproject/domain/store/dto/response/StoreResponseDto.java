@@ -10,7 +10,7 @@ import java.time.LocalTime;
 
 @Getter
 @AllArgsConstructor
-public class StoreCreateResponseDto {
+public class StoreResponseDto {
 
     private String name;
     private String category;
@@ -24,8 +24,8 @@ public class StoreCreateResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    public static StoreCreateResponseDto of(Store entity) {
-        return new StoreCreateResponseDto(
+    public static StoreResponseDto of(Store entity) {
+        return new StoreResponseDto(
                 entity.getName(),
                 entity.getCategory(),
                 entity.getTel(),

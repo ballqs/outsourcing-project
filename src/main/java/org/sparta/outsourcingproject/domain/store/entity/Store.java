@@ -125,7 +125,7 @@ public class Store extends Timestamped {
     // 현재 시간이 openTime과 closeTime 사이인지 확인
     public boolean isCurrentlyOpened() {
         LocalTime now = LocalTime.now();
-        return !now.isBefore(openTime) && now.isBefore(closeTime.plusMinutes(10));
+        return !now.isBefore(openTime) && now.isBefore(closeTime);
     }
 
     // 가게의 현재 상태를 업데이트
