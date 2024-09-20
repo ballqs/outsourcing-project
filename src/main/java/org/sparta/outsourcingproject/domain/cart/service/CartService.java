@@ -2,7 +2,6 @@ package org.sparta.outsourcingproject.domain.cart.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.sparta.outsourcingproject.common.annotation.OrderLog;
 import org.sparta.outsourcingproject.domain.cart.dto.*;
 import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.cart.entity.CartDetail;
@@ -10,9 +9,13 @@ import org.sparta.outsourcingproject.domain.cart.java.CartDetailEvent;
 import org.sparta.outsourcingproject.domain.cart.repository.CartRepository;
 import org.sparta.outsourcingproject.domain.order.service.OrdersService;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
+import org.sparta.outsourcingproject.domain.store.service.StoreService;
+import org.sparta.outsourcingproject.domain.user.entity.User;
+import org.sparta.outsourcingproject.domain.user.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +29,11 @@ public class CartService {
     private final CartDetailService cartDetailService;
     private final OrdersService ordersService;
     private final ApplicationEventPublisher eventPublisher;
+    private final UserService userService;
+    private final StoreService storeService;
 
     @Transactional
-    public void createCart(CartRequestInsertDto cartRequestInsertDto) {
+    public void createCart(Long userId , CartRequestInsertDto cartRequestInsertDto) {
         CartInsertDto cartInsertDto = cartRequestInsertDto.getCart();
         CartDetailInsertDto cartDetailInsertDto = cartRequestInsertDto.getCartDetail();
 
@@ -39,37 +44,35 @@ public class CartService {
 
         int sum = menuPrice * cnt;
 
-        // ★★★★★★★User user 체크한 값이다.★★★★★★★★
-        Long userId = cartInsertDto.getUserId();
-        // User user = userService.findById();
-        // ★★★★★★★Store Store 가져오는 곳.★★★★★★★★
-        // Store store = StoreService.findById();
+        User user = userService.findUser(userId);
+        Store store = storeService.findStore(cartInsertDto.getStoreId());
 
-        Optional<Cart> getCartInfo = cartRepository.findByUserId(userId);
+        Optional<Cart> getCartInfo = cartRepository.findByUserId(user.getId());
         Cart cart;
-
-        // 저장된 store값과 현재 들고온 store값이 다르면 장바구니 초기화(추후 작업)
-        if (getCartInfo.isPresent() && 1 == 2) {
+        if (getCartInfo.isPresent() && getCartInfo.get().getStore().getId().equals(store.getId())) {
             cart = getCartInfo.get();
             int nowTotalAmt = cartDetailService.getSumAmt(cart.getId()) + sum;
             cart.updateTotalAmt(nowTotalAmt);
         } else {
             cartRepository.deleteByUserId(userId);
-//            cart = new Cart(cartInsertDto.getStoreId() , cartInsertDto.getUserId() , sum);
+            cart = new Cart(user , store , sum);
         }
 
-//        Cart saveCart = cartRepository.save(cart);
+        Cart saveCart = cartRepository.save(cart);
 
-//        CartDetail cartDetail = new CartDetail(saveCart , menuId , menuName , menuPrice , cnt);
-//        eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
+        CartDetail cartDetail = new CartDetail(saveCart , menuId , menuName , menuPrice , cnt);
+        eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
     }
 
     // @transactionaleventlistener 공부해서 적용하기
 
     @Transactional
-    public void updateCart(Long cartDetailId , CartDetailUpdateDto cartDetailUpdateDto) {
+    public void updateCart(Long userId , Long cartDetailId , CartDetailUpdateDto cartDetailUpdateDto) {
         CartDetail cartDetail = cartDetailService.getCartDetail(cartDetailId);
         Cart cart = cartDetail.getCart();
+        if (userId.equals(cart.getUser().getId())) {
+            throw new IllegalArgumentException("본인의 장바구니가 아닌 것은 수정 불가능합니다.");
+        }
 
         Long menuId = cartDetailUpdateDto.getMenuId();
         String menuName = cartDetailUpdateDto.getMenuName();
@@ -85,8 +88,13 @@ public class CartService {
     }
 
     @Transactional
-    public void deleteCart(Long cartDetailId) {
+    public void deleteCart(Long userId , Long cartDetailId) {
         CartDetail cartDetail = cartDetailService.getCartDetail(cartDetailId);
+
+        if (!ObjectUtils.nullSafeEquals(userId , cartDetail.getCart().getUser().getId())) {
+            throw new IllegalArgumentException("본인이 아니면 삭제가 불가능합니다.");
+        }
+
         cartDetailService.deleteCartDetail(cartDetailId);
         List<CartDetail> cartDetails = cartDetailService.getAllCartDetails(cartDetail.getCart().getId());
         if (cartDetails.size() == 0) {
@@ -111,15 +119,14 @@ public class CartService {
         }
 
         // 최소 주문금액을 넘겼는지?
-//        Store store = new Store();
-        int minPrice = 15000;
-        if (cart.getTotalAmt() < minPrice) {
+        Store store = storeService.findStore(cart.getStore().getId());
+        if (cart.getTotalAmt() < store.getMinPrice()) {
             throw new IllegalArgumentException("최소 주문 금액보다 작습니다.");
         }
 
         // 주문 완료 작업
-        cartRepository.delete(cart);
         ordersService.orderComplete(cart);
+        cartRepository.delete(cart);
     }
 
     public CartResponseSelectDto getCarts(Long userId) {

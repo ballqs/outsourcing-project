@@ -117,4 +117,8 @@ public class StoreService {
         store.setStoreShutdown(); // 가게 폐업으로 상태 전환
     }
 
+    public Store findStore(Long storeId) {
+        return storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가게입니다."));
+    }
+
 }

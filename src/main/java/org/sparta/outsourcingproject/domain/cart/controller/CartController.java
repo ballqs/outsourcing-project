@@ -23,19 +23,19 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<ResponseDto<String>> createCart(@Auth AuthUser authUser , @Valid @RequestBody CartRequestInsertDto cartRequestInsertDto) {
-        cartService.createCart(cartRequestInsertDto);
+        cartService.createCart(authUser.getUserId() , cartRequestInsertDto);
         return ResponseEntity.ok(new ResponseDto<>(200 , null , "장바구니에 등록되었습니다."));
     }
 
     @PatchMapping("/{cartDetailId}")
     public ResponseEntity<ResponseDto<String>> updateCart(@Auth AuthUser authUser , @PathVariable Long cartDetailId , @Valid @RequestBody CartDetailUpdateDto cartDetailUpdateDto) {
-        cartService.updateCart(cartDetailId , cartDetailUpdateDto);
+        cartService.updateCart(authUser.getUserId() , cartDetailId , cartDetailUpdateDto);
         return ResponseEntity.ok(new ResponseDto<>(200 , null , "장바구니에 수정되었습니다."));
     }
 
     @DeleteMapping("/{cartDetailId}")
-    public ResponseEntity<ResponseDto<String>> deleteCart(@PathVariable Long cartDetailId) {
-        cartService.deleteCart(cartDetailId);
+    public ResponseEntity<ResponseDto<String>> deleteCart(@Auth AuthUser authUser , @PathVariable Long cartDetailId) {
+        cartService.deleteCart(authUser.getUserId() , cartDetailId);
         return ResponseEntity.ok(new ResponseDto<>(200 , null , "장바구니에 삭제되었습니다."));
     }
 
