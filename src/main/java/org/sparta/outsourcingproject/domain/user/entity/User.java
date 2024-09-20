@@ -26,7 +26,6 @@ public class User extends Timestamped {
     private String email;
     private String name;
     private String pw;
-
     @Column(name = "phoneNumber", unique = true)
     private String phoneNumber;
 
@@ -56,8 +55,8 @@ public class User extends Timestamped {
 
     public User(PostUserSaveRequestDto requestDto, String pw) {
         this.email = requestDto.getEmail();
-        this.pw = pw;
         this.name = requestDto.getName();
+        this.pw = pw;
         this.phoneNumber = requestDto.getPhoneNumber();
     }
 }
