@@ -56,7 +56,7 @@ public class JwtUtil {
 
     /* JWT 안에 있는 데이터를 추출 */
     public Claims extractClaims(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)

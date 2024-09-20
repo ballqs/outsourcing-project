@@ -23,10 +23,7 @@ public class GlobalExceptionHandler {
     }
 
     //이메일 중복
-    @ExceptionHandler(
-            {ConflictException.class,
-            DuplicateEmailException.class}
-    )
+    @ExceptionHandler(value = ConflictException.class)
     public ResponseEntity<ErrorResponse> ConflictHandle(ConflictException e){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(HttpStatus.CONFLICT.value() , e.getMessage()));
     }
