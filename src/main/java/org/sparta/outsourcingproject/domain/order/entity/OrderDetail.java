@@ -37,7 +37,7 @@ public class OrderDetail extends Timestamped {
         this.menuName = cartDetail.getMenuName();
         this.menuPrice = cartDetail.getMenuPrice();
         this.cnt = cartDetail.getCnt();
-//        this.menuId = cartDetail.getMenuId();
+        this.menu = cartDetail.getMenu();
         this.orders = orders;
     }
 }
