@@ -5,6 +5,7 @@ import org.sparta.outsourcingproject.common.exception.custom.BadRequestException
 import org.sparta.outsourcingproject.common.exception.custom.ConflictException;
 import org.sparta.outsourcingproject.common.exception.custom.ForbiddenException;
 import org.sparta.outsourcingproject.common.exception.custom.NotFoundException;
+import org.sparta.outsourcingproject.domain.user.exception.DuplicateEmailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,7 +22,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.value() , e.getMessage()));
     }
 
-    @ExceptionHandler(value = ConflictException.class)
+    //이메일 중복
+    @ExceptionHandler(
+            {ConflictException.class,
+            DuplicateEmailException.class}
+    )
     public ResponseEntity<ErrorResponse> ConflictHandle(ConflictException e){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(HttpStatus.CONFLICT.value() , e.getMessage()));
     }
