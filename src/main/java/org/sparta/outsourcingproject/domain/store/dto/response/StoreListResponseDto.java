@@ -11,4 +11,6 @@ import lombok.Getter;
 public class StoreListResponseDto {
 
 
+
+
 }

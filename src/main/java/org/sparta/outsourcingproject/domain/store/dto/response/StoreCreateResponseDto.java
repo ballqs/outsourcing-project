@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.enums.StoreStatus;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -23,6 +24,7 @@ public class StoreCreateResponseDto {
     private Integer minPrice;
     private String address;
     private StoreStatus status; // 개점/마감
+    private BigDecimal rating;
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -37,6 +39,7 @@ public class StoreCreateResponseDto {
                 entity.getMinPrice(),
                 entity.getAddress(),
                 entity.getStatus(),
+                entity.getRating(),
                 entity.getUser().getId(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt()

@@ -6,12 +6,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.common.dto.ResponseDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreCreateRequestDto;
+import org.sparta.outsourcingproject.domain.store.dto.request.StoreListRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreUpdateRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.response.StoreCreateResponseDto;
 import org.sparta.outsourcingproject.domain.store.dto.response.StoreGetResponseDto;
 import org.sparta.outsourcingproject.domain.store.service.StoreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -32,7 +35,7 @@ public class StoreController {
     }
 
     /**
-     * 가게 단건 조회 API
+     * 가게 단건 조회 API(가게 메뉴 포함)
      */
     @GetMapping("/{storeId}")
     public ResponseDto<StoreGetResponseDto> getStore(@PathVariable Long id) {
@@ -40,6 +43,14 @@ public class StoreController {
         return new ResponseDto<>(HttpStatus.CREATED.value(), res, "가게 단건 조회에 성공하였습니다!");
     }
 
+    /**
+     * 가게 다건 조회 API(가게 메뉴 포함 X)
+     */
+    @GetMapping
+    public ResponseDto<List<StoreCreateResponseDto>> getStores(@RequestBody StoreListRequestDto requestDto) {
+        List<StoreCreateResponseDto> res = storeService.getStores(requestDto);
+        return new ResponseDto<>(HttpStatus.OK.value(), res, "해당 이름을 포함하는 모든 가게 조회에 성공하였습니다.");
+    }
 
     /**
      * 가게 정보 수정 API

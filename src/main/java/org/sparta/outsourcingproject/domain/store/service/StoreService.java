@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -30,15 +31,14 @@ public class StoreService {
     // 가게 등록 메서드
     @Transactional
     public StoreCreateResponseDto createStore(StoreCreateRequestDto requestDto, Long userId) {
-        List<Store> stores = storeRepository.findByUserId(userId); // 해당 유저의 모든 가게 목록 가져오기
+        List<Store> stores = storeRepository.findByUserId(userId); // 해당 유저의 SHUTDOWN(폐업)인 아닌 모든 가게 목록 가져오기
 
         if (stores.size() > 3) {
-            throw new IllegalArgumentException("한 명당 가게를 3개까지만 등록할 수 있습니다");
+            throw new IllegalArgumentException("한 명당 가게를 3개까지만 운영할 수 있습니다");
         }
 
         User user = userService.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID를 갖는 유저를 찾을 수 없습니다."));
-
 
 
         // ------- 유저가 사장이 아니라면 예외 발생 코드 추가 -----------
@@ -80,17 +80,26 @@ public class StoreService {
     }
 
     // 가게 다건 조회 메서드
-//    public List<StoreCreateResponseDto> getStores(StoreListRequestDto requestDto) {
-//
-//        List<Store> findStoreList = new ArrayList<>();
-//
-//        storeRepository.findAll().stream()
-//                .filter(store -> store.getName().contains(requestDto.getName()))
-//                .map(findStoreList::add);
-//
-//    }
+    public List<StoreCreateResponseDto> getStores(StoreListRequestDto requestDto) {
+
+        List<Store> findStoreList = new ArrayList<>();
+
+        storeRepository.findAll().stream()
+                .filter(store -> store.getName().contains(requestDto.getName())) // 가게 이름에 입력받은 이름 포함하고 있고
+                .filter(store -> store.getOperationStatus() != StoreOperationStatus.SHUTDOWN) // 폐업(SHUTDOWN) 상태 아니라면 조건 부합
+                .forEach(store -> {
+                    store.updateOperationStatus(); // 현재 시각으로 가게의 개점/마감 상태 업데이트
+                    store.updateAverageRating(); // 평점 업데이트
+                    findStoreList.add(store); // 리스트에 추가
+                });
+
+        return findStoreList.stream()
+                .map(StoreCreateResponseDto::of)
+                .collect(Collectors.toList());
+    }
 
     // 가게 정보 수정 메서드
+    @Transactional
     public StoreGetResponseDto updateStoreInfo(StoreUpdateRequestDto requestDto, Long id) {
         Store store = storeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID를 갖는 가게를 찾을 수 없습니다."));
@@ -100,6 +109,7 @@ public class StoreService {
     }
 
     // 가게 폐업으로 전환 메서드
+    @Transactional
     public void setShutdownStore(Long id) {
         Store store = storeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가게입니다."));
