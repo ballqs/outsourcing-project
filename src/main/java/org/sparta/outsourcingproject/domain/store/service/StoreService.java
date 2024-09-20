@@ -26,44 +26,42 @@ import java.util.stream.Collectors;
 public class StoreService {
 
     private final StoreRepository storeRepository;
-//    private final UserService userService;
+    private final UserService userService;
 
     // 가게 등록 메서드
-//    @Transactional
-//    public StoreCreateResponseDto createStore(StoreCreateRequestDto requestDto, Long userId) {
-//        List<Store> stores = storeRepository.findByUserId(userId); // 해당 유저의 SHUTDOWN(폐업)인 아닌 모든 가게 목록 가져오기
-//
-//        if (stores.size() > 3) {
-//            throw new IllegalArgumentException("한 명당 가게를 3개까지만 운영할 수 있습니다");
-//        }
-//
-//        User user = userService.findById(userId)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 ID를 갖는 유저를 찾을 수 없습니다."));
-//
-//
-//        // ------- 유저가 사장이 아니라면 예외 발생 코드 추가 -----------
-//
-//
-//        // 등록할 가게 엔티티 생성
-//        Store newStore = Store.createStore(
-//                requestDto.getName(),
-//                requestDto.getCategory(),
-//                requestDto.getTel(),
-//                requestDto.getOpenTime(),
-//                requestDto.getCloseTime(),
-//                requestDto.getMinPrice(),
-//                requestDto.getAddress(),
-//                requestDto.getRating(),
-//                user,
-//                requestDto.getStoreOperationStatus()
-//        );
-//
-//        newStore.updateOperationStatus();  // 현재 시간으로 상태(개점/마감) 업데이트
-//        Store savedStore = storeRepository.save(newStore); // 가게 등록
-//
-//        return StoreCreateResponseDto.of(savedStore);
-//
-//    }
+    @Transactional
+    public StoreCreateResponseDto createStore(StoreCreateRequestDto requestDto, Long userId) {
+        List<Store> stores = storeRepository.findByUserId(userId); // 해당 유저의 SHUTDOWN(폐업)인 아닌 모든 가게 목록 가져오기
+
+        if (stores.size() > 3) {
+            throw new IllegalArgumentException("한 명당 가게를 3개까지만 운영할 수 있습니다");
+        }
+
+        User user = userService.findUser(userId);
+
+        // ------- 유저가 사장이 아니라면 예외 발생 코드 추가 -----------
+
+
+        // 등록할 가게 엔티티 생성
+        Store newStore = Store.createStore(
+                requestDto.getName(),
+                requestDto.getCategory(),
+                requestDto.getTel(),
+                requestDto.getOpenTime(),
+                requestDto.getCloseTime(),
+                requestDto.getMinPrice(),
+                requestDto.getAddress(),
+                requestDto.getRating(),
+                user,
+                requestDto.getStoreOperationStatus()
+        );
+
+        newStore.updateOperationStatus();  // 현재 시간으로 상태(개점/마감) 업데이트
+        Store savedStore = storeRepository.save(newStore); // 가게 등록
+
+        return StoreCreateResponseDto.of(savedStore);
+
+    }
 
     // 가게 단건 조회 메서드
     public StoreGetResponseDto getStore(Long id) {
@@ -74,7 +72,7 @@ public class StoreService {
             throw new IllegalArgumentException("폐업하여 이제 존재하지 않는 가게입니다");
         }
 
-        store.updateAverageRating(); // 가게 평균 평점 최신화
+//        store.updateAverageRating(); // 가게 평균 평점 최신화
         store.updateOperationStatus();  // 현재 시간으로 상태(개점/마감) 업데이트
         return StoreGetResponseDto.of(store);
     }
@@ -88,7 +86,7 @@ public class StoreService {
                 .filter(store -> store.getName().contains(requestDto.getName())&& store.getOperationStatus() != StoreOperationStatus.SHUTDOWN) // 가게 이름에 입력받은 이름 포함하고 있고 폐업 X
                 .forEach(store -> {
                     store.updateOperationStatus(); // 현재 시각으로 가게의 개점/마감 상태 업데이트
-                    store.updateAverageRating(); // 평점 업데이트
+//                    store.updateAverageRating(); // 평점 업데이트
                     findStoreList.add(store); // 리스트에 추가
                 });
 

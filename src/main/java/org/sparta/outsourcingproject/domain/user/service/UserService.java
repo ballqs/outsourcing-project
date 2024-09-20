@@ -18,7 +18,7 @@ public class UserService {
     private final PasswordEncoder encode;
     private final JwtUtil jwtUtil;
 
-    private User findUser(Long userId) {
+    public User findUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("user를 찾을 수 없습니다."));
     }
