@@ -63,7 +63,7 @@ public class CartService {
 
         Cart saveCart = cartRepository.save(cart);
 
-        CartDetail cartDetail = new CartDetail(saveCart , menuId , menu.getName() , menu.getPrice() , cnt);
+        CartDetail cartDetail = new CartDetail(saveCart , menu , menu.getName() , menu.getPrice() , cnt);
         eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
     }
 
@@ -73,7 +73,7 @@ public class CartService {
     public void updateCart(Long userId , Long cartDetailId , CartDetailUpdateDto cartDetailUpdateDto) {
         CartDetail cartDetail = cartDetailService.getCartDetail(cartDetailId);
         Cart cart = cartDetail.getCart();
-        if (userId.equals(cart.getUser().getId())) {
+        if (!userId.equals(cart.getUser().getId())) {
             throw new IllegalArgumentException("본인의 장바구니가 아닌 것은 수정 불가능합니다.");
         }
 
@@ -86,7 +86,7 @@ public class CartService {
         cart.updateTotalAmt(cart.getTotalAmt() - (cartDetail.getMenuPrice() * cartDetail.getCnt()) + (menu.getPrice() * cnt));
 
         // 2.cartDetail 테이블 update
-        cartDetail.update(menuId , menu.getName() , menu.getPrice() , cnt);
+        cartDetail.update(menu , menu.getName() , menu.getPrice() , cnt);
         eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
     }
 

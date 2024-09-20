@@ -39,7 +39,7 @@ public class OrdersService {
     public void changeStatus(Long userId , Long orderId) {
         // 접근한 유저가 해당 주문을 받은 가게의 담당자와 일치하는지 검증!
         Orders orders = ordersRepository.findByIdOrThrow(orderId);
-        if (userId.equals(orders.getStore().getUser().getId())) {
+        if (!userId.equals(orders.getStore().getUser().getId())) {
             throw new IllegalArgumentException("니 주문 아님");
         }
 

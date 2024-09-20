@@ -70,6 +70,8 @@ public class Orders extends Timestamped {
         orders.addressDetail = user.getAddressDetail();
         orders.ordersProcess = OrdersProcessEnum.ORDER;
         orders.totalAmt = cart.getTotalAmt();
+        orders.user = cart.getUser();
+        orders.store = cart.getStore();
         return orders;
     }
 }
