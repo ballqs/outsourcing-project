@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.sparta.outsourcingproject.common.code.ErrorCode;
 import org.sparta.outsourcingproject.common.config.JwtUtil;
 import org.sparta.outsourcingproject.common.config.PasswordEncoder;
+import org.sparta.outsourcingproject.domain.user.dto.PostUserSignInRequestDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSignUpRequestDto;
 import org.sparta.outsourcingproject.domain.user.exception.DuplicateEmailException;
-import org.sparta.outsourcingproject.domain.user.dto.PostUserSaveRequestDto;
-import org.sparta.outsourcingproject.domain.user.dto.PostUserSaveResponseDto;
 import org.sparta.outsourcingproject.domain.user.entity.User;
 import org.sparta.outsourcingproject.domain.user.exception.MismatchPasswordException;
 import org.sparta.outsourcingproject.domain.user.exception.UserNotFindException;
@@ -21,27 +20,27 @@ public class UserService {
     private final PasswordEncoder encode;
     private final JwtUtil jwtUtil;
 
-    //회원가입
-    public void signInUser(PostUserSaveRequestDto postUserSaveRequestDto) {
+    //회원가입 signUp
+    public void signUpUser(PostUserSignUpRequestDto postUserSignUpRequestDto) {
         // 이메일 중복 확인
-        boolean overlap = userRepository.existsByEmail(postUserSaveRequestDto.getEmail());
+        boolean overlap = userRepository.existsByEmail(postUserSignUpRequestDto.getEmail());
         if (overlap) {
             throw new DuplicateEmailException(ErrorCode.DUPLICATE_EMAIL_ERROR);
         }
 
         //비밀번호 벨류체크
-        if(!encode.passwordVerification(postUserSaveRequestDto.getPw())){
+        if(!encode.passwordVerification(postUserSignUpRequestDto.getPw())){
             throw new IllegalArgumentException("올바르지 않은 비밀번호 형식입니다.");
         }
         // 비밀번호 암호화
-        String pw = encode.encode(postUserSaveRequestDto.getPw());
+        String pw = encode.encode(postUserSignUpRequestDto.getPw());
 
-        User user = new User(postUserSaveRequestDto, pw);
+        User user = new User(postUserSignUpRequestDto, pw);
         userRepository.save(user);
     }
 
     //로그인
-    public String signUpUser(PostUserSignUpRequestDto postUserSignUpRequestDto) {
+    public String signInUser(PostUserSignInRequestDto postUserSignUpRequestDto) {
         String email = postUserSignUpRequestDto.getEmail();
         String pw = postUserSignUpRequestDto.getPw();
 
@@ -49,7 +48,7 @@ public class UserService {
 
         checkPw(pw, user.getPw());
 
-        return jwtUtil.createToken(user.getId(), user.getEmail());
+        return jwtUtil.createToken(user.getId(), user.getEmail(),user.getAuthority());
     }
 
 
