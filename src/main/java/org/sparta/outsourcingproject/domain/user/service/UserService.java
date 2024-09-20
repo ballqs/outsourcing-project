@@ -1,8 +1,10 @@
 package org.sparta.outsourcingproject.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.sparta.outsourcingproject.common.code.ErrorCode;
+import org.sparta.outsourcingproject.common.config.JwtUtil;
 import org.sparta.outsourcingproject.common.config.PasswordEncoder;
-import org.sparta.outsourcingproject.common.exception.custom.DuplicateEmailException;
+import org.sparta.outsourcingproject.domain.user.exception.DuplicateEmailException;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSaveRequestDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSaveResponseDto;
 import org.sparta.outsourcingproject.domain.user.entity.User;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encode;
-
+    private final JwtUtil jwtUtil;
 
     private User findUser(Long userId) {
         return userRepository.findById(userId)
@@ -26,9 +28,13 @@ public class UserService {
         // 이메일 중복 확인
         boolean overlap = userRepository.existsByEmail(postUserSaveRequestDto.getEmail());
         if (overlap) {
-            throw new DuplicateEmailException("이미 사용중인 ID 입니다.");
+            throw new DuplicateEmailException(ErrorCode.DUPLICATE_EMAIL_ERROR);
         }
 
+        //비밀번호 벨류체크
+        if(!encode.passwordVerification(postUserSaveRequestDto.getPw())){
+            throw new IllegalArgumentException("올바르지 않은 비밀번호 형식입니다.");
+        }
         // 비밀번호 암호화
         String pw = encode.encode(postUserSaveRequestDto.getPw());
 

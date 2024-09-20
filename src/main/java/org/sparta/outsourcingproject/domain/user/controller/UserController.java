@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private UserService userService;
+
     @PostMapping("/signIn")
     public ResponseEntity <PostUserSaveResponseDto> signInUser(@RequestBody PostUserSaveRequestDto postUserSaveRequestDto){
         return ResponseEntity.ok(userService.signInUser(postUserSaveRequestDto));
     }
+
 }
