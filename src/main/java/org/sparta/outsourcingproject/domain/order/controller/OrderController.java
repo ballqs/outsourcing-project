@@ -6,7 +6,6 @@ import org.sparta.outsourcingproject.common.dto.AuthUser;
 import org.sparta.outsourcingproject.common.dto.ResponseDto;
 import org.sparta.outsourcingproject.domain.order.dto.OrdersResponseSelectDto;
 import org.sparta.outsourcingproject.domain.order.service.OrdersService;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
