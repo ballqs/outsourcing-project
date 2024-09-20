@@ -7,6 +7,8 @@ import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.cart.entity.CartDetail;
 import org.sparta.outsourcingproject.domain.cart.java.CartDetailEvent;
 import org.sparta.outsourcingproject.domain.cart.repository.CartRepository;
+import org.sparta.outsourcingproject.domain.menu.entity.Menu;
+import org.sparta.outsourcingproject.domain.menu.service.MenuService;
 import org.sparta.outsourcingproject.domain.order.service.OrdersService;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.service.StoreService;
@@ -31,6 +33,7 @@ public class CartService {
     private final ApplicationEventPublisher eventPublisher;
     private final UserService userService;
     private final StoreService storeService;
+    private final MenuService menuService;
 
     @Transactional
     public void createCart(Long userId , CartRequestInsertDto cartRequestInsertDto) {
@@ -38,14 +41,14 @@ public class CartService {
         CartDetailInsertDto cartDetailInsertDto = cartRequestInsertDto.getCartDetail();
 
         Long menuId = cartDetailInsertDto.getMenuId();
-        String menuName = cartDetailInsertDto.getMenuName();
-        int menuPrice = cartDetailInsertDto.getMenuPrice();
         int cnt = cartDetailInsertDto.getCnt();
 
-        int sum = menuPrice * cnt;
 
         User user = userService.findUser(userId);
         Store store = storeService.findStore(cartInsertDto.getStoreId());
+        Menu menu = menuService.getMenu(menuId);
+
+        int sum = menu.getPrice() * cnt;
 
         Optional<Cart> getCartInfo = cartRepository.findByUserId(user.getId());
         Cart cart;
@@ -60,7 +63,7 @@ public class CartService {
 
         Cart saveCart = cartRepository.save(cart);
 
-        CartDetail cartDetail = new CartDetail(saveCart , menuId , menuName , menuPrice , cnt);
+        CartDetail cartDetail = new CartDetail(saveCart , menuId , menu.getName() , menu.getPrice() , cnt);
         eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
     }
 
@@ -75,15 +78,15 @@ public class CartService {
         }
 
         Long menuId = cartDetailUpdateDto.getMenuId();
-        String menuName = cartDetailUpdateDto.getMenuName();
-        int menuPrice = cartDetailUpdateDto.getMenuPrice();
         int cnt = cartDetailUpdateDto.getCnt();
 
+        Menu menu = menuService.getMenu(menuId);
+
         // 1.cart 테이블의 금액 변경
-        cart.updateTotalAmt(cart.getTotalAmt() - (cartDetail.getMenuPrice() * cartDetail.getCnt()) + (menuPrice * cnt));
+        cart.updateTotalAmt(cart.getTotalAmt() - (cartDetail.getMenuPrice() * cartDetail.getCnt()) + (menu.getPrice() * cnt));
 
         // 2.cartDetail 테이블 update
-        cartDetail.update(menuId , menuName , menuPrice , cnt);
+        cartDetail.update(menuId , menu.getName() , menu.getPrice() , cnt);
         eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
     }
 
@@ -91,7 +94,7 @@ public class CartService {
     public void deleteCart(Long userId , Long cartDetailId) {
         CartDetail cartDetail = cartDetailService.getCartDetail(cartDetailId);
 
-        if (!ObjectUtils.nullSafeEquals(userId , cartDetail.getCart().getUser().getId())) {
+        if (!userId.equals(cartDetail.getCart().getUser().getId())) {
             throw new IllegalArgumentException("본인이 아니면 삭제가 불가능합니다.");
         }
 
