@@ -3,6 +3,8 @@ package org.sparta.outsourcingproject.domain.cart.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
 
 import java.util.ArrayList;
@@ -23,7 +25,8 @@ public class Cart extends Timestamped {
     private Long userId;  // user 외래키
     private Long storeId; // store 외래키
 
-    @OneToMany(mappedBy = "cart" , cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "cart", orphanRemoval = true)
     private List<CartDetail> cartDetails = new ArrayList<>();
 
     public Cart(Long userId, Long storeId, int totalAmt) {

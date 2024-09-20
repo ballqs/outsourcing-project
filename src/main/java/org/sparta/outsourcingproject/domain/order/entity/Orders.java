@@ -4,6 +4,8 @@ package org.sparta.outsourcingproject.domain.order.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
 
 import java.util.ArrayList;
@@ -40,6 +42,11 @@ public class Orders extends Timestamped {
     private Long userId;  // user 외래키
     private Long storeId; // store 외래키
 
-    @OneToMany(mappedBy = "orders" , cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "orders" , orphanRemoval = true)
     private List<OrderDetail> orderDetails = new ArrayList<>();
+
+    public void updateOrdersProcess(OrdersProcessEnum ordersProcess) {
+        this.ordersProcess = ordersProcess;
+    }
 }

@@ -2,6 +2,7 @@ package org.sparta.outsourcingproject.domain.cart.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.sparta.outsourcingproject.common.annotation.OrderLog;
 import org.sparta.outsourcingproject.domain.cart.dto.*;
 import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.cart.entity.CartDetail;
@@ -117,7 +118,8 @@ public class CartService {
         }
 
         // 주문 완료 작업
-         ordersService.orderComplete(cart);
+        cartRepository.delete(cart);
+        ordersService.orderComplete(cart);
     }
 
     public CartResponseSelectDto getCarts(Long userId) {
