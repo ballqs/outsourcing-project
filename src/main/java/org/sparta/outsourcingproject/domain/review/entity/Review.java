@@ -35,4 +35,3 @@ public class Review {
         this.createdAt = LocalDateTime.now();  // 생성 시간 자동 저장
     }
 }
-
