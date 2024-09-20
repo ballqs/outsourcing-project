@@ -8,6 +8,7 @@ import org.sparta.outsourcingproject.common.entity.Timestamped;
 import org.sparta.outsourcingproject.domain.menu.entity.Menu;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
+import org.sparta.outsourcingproject.domain.store.dto.request.StoreUpdateRequestDto;
 import org.sparta.outsourcingproject.domain.store.enums.StoreOperationStatus;
 import org.sparta.outsourcingproject.domain.store.enums.StoreStatus;
 import org.sparta.outsourcingproject.domain.user.entity.User;
@@ -100,7 +101,7 @@ public class Store extends Timestamped {
         return createdStore;
     }
 
-    //=====연관관계 메서드======//
+    //=====연관관계 메서드========//
 
     public void setUser(User user) {
         this.user = user;
@@ -121,6 +122,9 @@ public class Store extends Timestamped {
         menus.add(menu);
         menu.setStore(this);
     }
+
+    // ===================== //
+
 
     // 현재 시간이 openTime과 closeTime 사이인지 확인
     public boolean isCurrentlyOpened() {
@@ -164,6 +168,17 @@ public class Store extends Timestamped {
     // 가게 폐업
     public void setStoreShutdown() {
         this.operationStatus = StoreOperationStatus.SHUTDOWN;
+    }
+
+    // 가게 정보 수정
+    public void updateStoreInfo(StoreUpdateRequestDto requestDto) {
+        this.name = requestDto.getName();
+        this.category = requestDto.getCategory();
+        this.tel = requestDto.getTel();
+        this.openTime = requestDto.getOpenTime();
+        this.closeTime = requestDto.getCloseTime();
+        this.minPrice = requestDto.getMinPrice();
+        this.address = requestDto.getAddress();
     }
 
 

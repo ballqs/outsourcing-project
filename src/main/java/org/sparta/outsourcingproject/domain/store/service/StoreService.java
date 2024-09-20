@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreCreateRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreListRequestDto;
+import org.sparta.outsourcingproject.domain.store.dto.request.StoreUpdateRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.response.StoreCreateResponseDto;
 import org.sparta.outsourcingproject.domain.store.dto.response.StoreGetResponseDto;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
@@ -89,17 +90,24 @@ public class StoreService {
 //
 //    }
 
+    // 가게 정보 수정 메서드
+    public StoreGetResponseDto updateStoreInfo(StoreUpdateRequestDto requestDto, Long id) {
+        Store store = storeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID를 갖는 가게를 찾을 수 없습니다."));
+
+        store.updateStoreInfo(requestDto); // 더티 체킹으로 가게 정보 수정
+        return StoreGetResponseDto.of(store);
+    }
+
     // 가게 폐업으로 전환 메서드
-    public void updateOperateStatus(Long id) {
+    public void setShutdownStore(Long id) {
         Store store = storeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 가게입니다."));
 
         if (store.getOperationStatus() == StoreOperationStatus.SHUTDOWN) {
             throw new IllegalArgumentException("이미 폐업한 가게입니다.");
         }
-
         store.setStoreShutdown(); // 가게 폐업으로 상태 전환
     }
-
 
 }
