@@ -36,9 +36,9 @@ public class Cart extends Timestamped {
     @JoinColumn(name = "store_id" , nullable = false)
     private Store store;
 
-    public Cart(User user, Long storeId, int totalAmt) {
-//        this.userId = userId;
-//        this.storeId = storeId;
+    public Cart(User user, Store store, int totalAmt) {
+        this.user = user;
+        this.store = store;
         this.totalAmt = totalAmt;
     }
 
