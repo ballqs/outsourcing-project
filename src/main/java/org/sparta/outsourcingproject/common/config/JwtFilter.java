@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.sparta.outsourcingproject.domain.user.Authority;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class JwtFilter implements Filter {
         String url = httpRequest.getRequestURI();
 
         // 해당 컨트롤러는 토큰 검사를 안한다.
-        if(url.equals("/api/users/signIn") || url.startsWith("/api/users/signUp")) {
+        if(url.equals("/api/users/signin") || url.startsWith("/api/users/signup")) {
             chain.doFilter(request, response);
             return;
         }
@@ -55,6 +56,8 @@ public class JwtFilter implements Filter {
             // JWT 유효성 검사와 claims 추출
             Claims claims = jwtUtil.extractClaims(jwt);
 
+            String authorityStr = claims.get("authority", String.class);
+            httpRequest.setAttribute("authority",Authority.valueOf(authorityStr));//권한 추가
             // 사용자 정보를 ArgumentResolver 로 넘기기 위해 HttpServletRequest 에 세팅
             httpRequest.setAttribute("userId", Long.parseLong(claims.getSubject()));
             httpRequest.setAttribute("email", claims.get("email", String.class));

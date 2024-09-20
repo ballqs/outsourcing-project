@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import org.sparta.outsourcingproject.common.annotation.Auth;
 import org.sparta.outsourcingproject.common.dto.AuthUser;
+import org.sparta.outsourcingproject.domain.user.Authority;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -34,10 +35,10 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
     ) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-        // JwtFilter 에서 set 한 userId, email 값을 가져옴
+        // JwtFilter 에서 set 한 userId, email,authority 값을 가져옴
         Long userId = (Long) request.getAttribute("userId");
         String email = (String) request.getAttribute("email");
-
-        return new AuthUser(userId, email);
+        Authority authority = (Authority) request.getAttribute("authority");
+        return new AuthUser(userId, email, authority);
     }
 }
