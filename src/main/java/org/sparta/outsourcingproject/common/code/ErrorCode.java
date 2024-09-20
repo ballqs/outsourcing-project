@@ -14,7 +14,9 @@ public enum ErrorCode {
 
     DUPLICATE_EMAIL_ERROR(HttpStatus.CONFLICT.value(),"중복된 이메일입니다."),
     // 500
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(),"서버 에러");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(),"서버 에러"),
+    STORE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "해당 ID를 가진 가게를 찾을 수 없습니다");
+
 
     private final int status;
     private final String message;
