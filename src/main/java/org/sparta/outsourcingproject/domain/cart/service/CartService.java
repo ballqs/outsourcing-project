@@ -55,13 +55,13 @@ public class CartService {
             cart.updateTotalAmt(nowTotalAmt);
         } else {
             cartRepository.deleteByUserId(userId);
-            cart = new Cart(cartInsertDto.getStoreId() , cartInsertDto.getUserId() , sum);
+//            cart = new Cart(cartInsertDto.getStoreId() , cartInsertDto.getUserId() , sum);
         }
 
-        Cart saveCart = cartRepository.save(cart);
+//        Cart saveCart = cartRepository.save(cart);
 
-        CartDetail cartDetail = new CartDetail(saveCart , menuId , menuName , menuPrice , cnt);
-        eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
+//        CartDetail cartDetail = new CartDetail(saveCart , menuId , menuName , menuPrice , cnt);
+//        eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
     }
 
     // @transactionaleventlistener 공부해서 적용하기
@@ -111,7 +111,7 @@ public class CartService {
         }
 
         // 최소 주문금액을 넘겼는지?
-        Store store = new Store();
+//        Store store = new Store();
         int minPrice = 15000;
         if (cart.getTotalAmt() < minPrice) {
             throw new IllegalArgumentException("최소 주문 금액보다 작습니다.");

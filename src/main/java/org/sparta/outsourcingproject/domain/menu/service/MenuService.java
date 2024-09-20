@@ -16,6 +16,10 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
 
+    public Menu getMenu(Long menuId) {
+        return menuRepository.findById(menuId).orElse(null);
+    }
+
     @Transactional
     public MenuResponseDto createMenu(MenuRequestDto menuRequestDto) {
         // 메뉴 생성은 사장님만 가능.  - JWT를 가져와 인증하는 절차.

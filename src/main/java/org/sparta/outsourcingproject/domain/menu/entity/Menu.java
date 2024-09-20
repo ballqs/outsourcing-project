@@ -17,7 +17,7 @@ public class Menu extends Timestamped {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String field;
+    private String name;
 
     @Column(nullable = false)
     private String type;        // enum 으로 한식, 양식, 중식, 일식, 분식 등 처리해보기
@@ -25,29 +25,29 @@ public class Menu extends Timestamped {
     @Column(nullable = false)
     private int price;
 
-    @Column
+    @Column(nullable = false)
     private boolean soldOut;
+
+    @Column(nullable = false)  // 삭제 여부 (soft delete) default = false;
+    private boolean status = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    // 삭제 여부 (soft delete) default = false;
-    private boolean status = false;
-
     public void delete() {
         this.status = true;
     }
 
-    public void update(String field, String type, int price, boolean soldOut) {
-        this.field = field;
+    public void update(String name, String type, int price, boolean soldOut) {
+        this.name = name;
         this.type = type;
         this.price = price;
         this.soldOut = soldOut;
     }
 
-    public Menu(String field, String type, int price) {
-        this.field = field;
+    public Menu(String name, String type, int price) {
+        this.name = name;
         this.type = type;
         this.price = price;
         this.soldOut = false;

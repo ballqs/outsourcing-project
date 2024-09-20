@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
+import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.menu.entity.Menu;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
@@ -69,6 +70,7 @@ public class Store extends Timestamped {
 
     @OneToMany(mappedBy = "store")
     private List<Menu> menus = new ArrayList<>();
+
 
 
     // 객체 생성 위한 정적 팩토리 메서드

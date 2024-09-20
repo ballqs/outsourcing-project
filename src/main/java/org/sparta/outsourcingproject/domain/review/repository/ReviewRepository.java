@@ -1,3 +1,12 @@
+package org.sparta.outsourcingproject.domain.review.repository;
+
+import org.sparta.outsourcingproject.domain.review.entity.Review;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+}
+
+
 //package org.sparta.outsourcingproject.domain.review.repository;
 //
 //import org.sparta.outsourcingproject.domain.order.service.OrderService;

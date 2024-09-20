@@ -7,7 +7,7 @@ import org.sparta.outsourcingproject.domain.menu.entity.Menu;
 public class MenuEditResponseDto {
     private Long id;
 
-    private String field;
+    private String name;
 
     private String type;
 
@@ -15,9 +15,9 @@ public class MenuEditResponseDto {
 
     private boolean soldOut;
 
-    public MenuEditResponseDto(Long id, String field, String type, int price, boolean soldOut) {
+    public MenuEditResponseDto(Long id, String name, String type, int price, boolean soldOut) {
         this.id = id;
-        this.field = field;
+        this.name = name;
         this.type = type;
         this.price = price;
         this.soldOut = soldOut;
@@ -25,7 +25,7 @@ public class MenuEditResponseDto {
 
     public MenuEditResponseDto(Menu menu){
         this.id = menu.getId();
-        this.field = menu.getField();
+        this.name = menu.getName();
         this.type = menu.getType();
         this.price = menu.getPrice();
         this.soldOut = menu.isSoldOut();

@@ -29,7 +29,7 @@ public class OrdersService {
 
     public void orderComplete(Cart cart) {
         // user 정보
-        Long userId = cart.getUserId();
+//        Long userId = cart.getUserId();
         // User user = userService.findById(userId);
         User user = new User();
 
@@ -53,7 +53,7 @@ public class OrdersService {
         switch(ordersProcessEnum) {
             case ORDER:
                 // 최소 주문 금액을 넘었는지?
-                Store store = new Store();
+//                Store store = new Store();
                 int minPrice = 15000;
                 if (orders.getTotalAmt() < minPrice) throw new IllegalArgumentException("최소 주문 금액을 넘기지 못한 주문은 승인 불가입니다.");
                 break;

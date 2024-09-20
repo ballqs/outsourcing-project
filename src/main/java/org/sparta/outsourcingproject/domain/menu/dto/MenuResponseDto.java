@@ -9,22 +9,22 @@ import org.sparta.outsourcingproject.domain.menu.entity.Menu;
 public class MenuResponseDto {
     private Long id;
 
-    private String field;
+    private String name;
 
     private String type;
 
     private int price;
 
-    public MenuResponseDto(Long id, String field, String type, int price) {
+    public MenuResponseDto(Long id, String name, String type, int price) {
         this.id = id;
-        this.field = field;
+        this.name = name;
         this.type = type;
         this.price = price;
     }
 
     public MenuResponseDto(Menu menu){
         this.id = menu.getId();
-        this.field = menu.getField();
+        this.name = menu.getName();
         this.type = menu.getType();
         this.price = menu.getPrice();
     }
