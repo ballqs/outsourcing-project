@@ -40,7 +40,7 @@ public class OrdersService {
         // 접근한 유저가 해당 주문을 받은 가게의 담당자와 일치하는지 검증!
         Orders orders = ordersRepository.findByIdOrThrow(orderId);
         if (!userId.equals(orders.getStore().getUser().getId())) {
-            throw new IllegalArgumentException("니 주문 아님");
+            throw new IllegalArgumentException("본인의 가게의 주문이 아니면 상태전환이 불가능합니다.");
         }
 
         // 주문 다음 상태로 이행 작업
