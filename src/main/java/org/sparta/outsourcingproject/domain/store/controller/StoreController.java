@@ -27,12 +27,12 @@ public class StoreController {
     /**
      * 가게 등록 API
      */
-    @PostMapping
-    public ResponseDto<StoreCreateResponseDto> createStore(@RequestBody StoreCreateRequestDto requestDto, HttpServletRequest httpServletRequest) {
-        Long userId = (Long) httpServletRequest.getAttribute("userId");
-        StoreCreateResponseDto res = storeService.createStore(requestDto, userId);
-        return new ResponseDto<>(HttpStatus.CREATED.value(), res, "가게 등록에 성공하였습니다!");
-    }
+//    @PostMapping
+//    public ResponseDto<StoreCreateResponseDto> createStore(@RequestBody StoreCreateRequestDto requestDto, HttpServletRequest httpServletRequest) {
+//        Long userId = (Long) httpServletRequest.getAttribute("userId");
+//        StoreCreateResponseDto res = storeService.createStore(requestDto, userId);
+//        return new ResponseDto<>(HttpStatus.CREATED.value(), res, "가게 등록에 성공하였습니다!");
+//    }
 
     /**
      * 가게 단건 조회 API(가게 메뉴 포함)
@@ -68,9 +68,5 @@ public class StoreController {
         storeService.setShutdownStore(id);
         return new ResponseDto<>(HttpStatus.OK.value(), null, "해당 가게가 폐업 상태로 전환되었습니다");
     }
-
-
-
-
 
 }

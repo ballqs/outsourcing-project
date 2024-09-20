@@ -15,7 +15,6 @@ import org.sparta.outsourcingproject.domain.user.entity.User;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,25 +102,25 @@ public class Store extends Timestamped {
 
     //=====연관관계 메서드========//
 
-    public void setUser(User user) {
-        this.user = user;
-        user.getStores().add(this);
-    }
+//    public void setUser(User user) {
+//        this.user = user;
+//        user.getStores().add(this);
+//    }
 
-    public void addReview(Review review) {
-        reviews.add(review);
-        review.setReview(this);
-    }
-
-    public void addOrder(Orders orders) {
-        orderList.add(orders);
-        orders.setStore(this);
-    }
-
-    public void addMenu(Menu menu) {
-        menus.add(menu);
-        menu.setStore(this);
-    }
+//    public void addReview(Review review) {
+//        reviews.add(review);
+//        review.setReview(this);
+//    }
+//
+//    public void addOrder(Orders orders) {
+//        orderList.add(orders);
+//        orders.setStore(this);
+//    }
+//
+//    public void addMenu(Menu menu) {
+//        menus.add(menu);
+//        menu.setStore(this);
+//    }
 
     // ===================== //
 
@@ -150,19 +149,19 @@ public class Store extends Timestamped {
         }
 
         // 리뷰 평점 합계
-        BigDecimal totalRating = reviews.stream()
-                .map(Review::getRating)  // 각 리뷰의 평점 가져오기
-                .reduce(BigDecimal.ZERO, BigDecimal::add);  // 평점 합산
+//        BigDecimal totalRating = reviews.stream()
+//                .map(Review::getRating)  // 각 리뷰의 평점 가져오기
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);  // 평점 합산
 
         // 평균 계산 (평점의 합을 리뷰 개수로 나누기)
-        BigDecimal averageRating = totalRating.divide(
-                BigDecimal.valueOf(reviews.size()),  // 리뷰 개수
-                2,  // 소수점 2자리로 설정
-                RoundingMode.HALF_UP  // 반올림 모드
-        );
+//        BigDecimal averageRating = totalRating.divide(
+//                BigDecimal.valueOf(reviews.size()),  // 리뷰 개수
+//                2,  // 소수점 2자리로 설정
+//                RoundingMode.HALF_UP  // 반올림 모드
+//        );
 
         // 가게의 평점 업데이트
-        this.rating = averageRating;
+//        this.rating = averageRating;
     }
 
     // 가게 폐업
