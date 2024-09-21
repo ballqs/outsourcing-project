@@ -5,6 +5,7 @@ import org.sparta.outsourcingproject.common.code.ErrorCode;
 import org.sparta.outsourcingproject.common.config.JwtUtil;
 import org.sparta.outsourcingproject.common.config.PasswordEncoder;
 import org.sparta.outsourcingproject.common.dto.AuthUser;
+import org.sparta.outsourcingproject.domain.user.dto.DeleteReqestDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserResponseDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSignInRequestDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSignUpRequestDto;
@@ -14,6 +15,7 @@ import org.sparta.outsourcingproject.domain.user.exception.MismatchPasswordExcep
 import org.sparta.outsourcingproject.domain.user.exception.UserNotFindException;
 import org.sparta.outsourcingproject.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,12 +55,17 @@ public class UserService {
         return jwtUtil.createToken(user.getId(), user.getEmail(),user.getAuthority());
     }
 
-    public void deleteUser(AuthUser authUser) {
+    //회원 탈퇴
+    @Transactional
+    public void deleteUser(AuthUser authUser, DeleteReqestDto deleteReqestDto) {
         Long id = authUser.getUserId();
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFindException(ErrorCode.USER_NOT_FIND_ERROR));
-        //유저 비활성화 코드
-        user.delete();
+        User user = findUser(id);
 
+        //비밀번호 체크
+        String pw= deleteReqestDto.getPw();
+        checkPw(pw, user.getPw());
+        //유저 비활성화 코드
+        user.update();
     }
 
     public User findUser(Long userId) {

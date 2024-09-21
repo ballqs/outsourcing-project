@@ -68,7 +68,7 @@ public class User extends Timestamped {
         this.status = true;
     }
 
-    public void delete() {
+    public void update() {
         this.status = false;
     }
 }

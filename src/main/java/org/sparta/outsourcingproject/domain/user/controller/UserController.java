@@ -4,8 +4,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchProfile;
 import org.sparta.outsourcingproject.common.annotation.Auth;
 import org.sparta.outsourcingproject.common.dto.AuthUser;
+import org.sparta.outsourcingproject.domain.user.dto.DeleteReqestDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserResponseDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSignInRequestDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSignUpRequestDto;
@@ -39,9 +42,9 @@ public class UserController {
     }
 
     //회원탈퇴 delete
-    @DeleteMapping("/delete")
-    public ResponseEntity<PostUserResponseDto> deleteUser(@Auth AuthUser authUser){
-        userService.deleteUser(authUser);
+    @PatchMapping("/delete")
+    public ResponseEntity<PostUserResponseDto> deleteUser(@Auth AuthUser authUser,@RequestBody DeleteReqestDto deleteReqestDto){
+        userService.deleteUser(authUser,deleteReqestDto);
         return ResponseEntity.ok(new PostUserResponseDto(HttpStatus.OK, "회원 탈퇴하였습니다."));
     }
 }
