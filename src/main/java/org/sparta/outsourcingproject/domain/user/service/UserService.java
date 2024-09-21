@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.sparta.outsourcingproject.common.code.ErrorCode;
 import org.sparta.outsourcingproject.common.config.JwtUtil;
 import org.sparta.outsourcingproject.common.config.PasswordEncoder;
+import org.sparta.outsourcingproject.common.dto.AuthUser;
+import org.sparta.outsourcingproject.domain.user.dto.PostUserResponseDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSignInRequestDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSignUpRequestDto;
 import org.sparta.outsourcingproject.domain.user.exception.DuplicateEmailException;
@@ -47,10 +49,17 @@ public class UserService {
         User user = findByEmailUser(email);
 
         checkPw(pw, user.getPw());
-
+        checkStatus(user);
         return jwtUtil.createToken(user.getId(), user.getEmail(),user.getAuthority());
     }
 
+    public void deleteUser(AuthUser authUser) {
+        Long id = authUser.getUserId();
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFindException(ErrorCode.USER_NOT_FIND_ERROR));
+        //유저 비활성화 코드
+        user.delete();
+
+    }
 
     public User findUser(Long userId) {
         return userRepository.findById(userId)
@@ -65,6 +74,12 @@ public class UserService {
     private void checkPw(String userPw, String enPw) {
         if (!encode.matches(userPw, enPw)) {
             throw new MismatchPasswordException(ErrorCode.MISMATCH_PASSWORD_ERROR);
+        }
+    }
+
+    private void checkStatus(User user){
+        if(!user.isStatus()){
+            throw new UserNotActiveException(ErrorCode.USER_NOT_FIND_ERROR);
         }
     }
 }
