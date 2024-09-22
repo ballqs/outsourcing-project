@@ -20,7 +20,6 @@ public class MenuController {
 
     private final MenuService menuService;
 
-
     @PostMapping("/register")
     public ResponseEntity<MenuResponseDto> createMenu(@Auth AuthUser authUser, @Valid @RequestBody MenuRequestDto menuRequestDto) {
         MenuResponseDto menuResponseDto = menuService.createMenu(authUser.getUserId(), menuRequestDto);
@@ -31,5 +30,11 @@ public class MenuController {
     public ResponseEntity<MenuEditResponseDto> updateMenu(@Auth AuthUser authUser, @Valid @RequestBody MenuEditRequestDto menuEditRequestDto, @PathVariable Long menuId) {
         MenuEditResponseDto menuEditResponseDto = menuService.updateMenu(authUser.getUserId(), menuEditRequestDto, menuId);
         return new ResponseEntity<>(menuEditResponseDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{menuId}/stores/{storeId}")
+    public ResponseEntity<Void> deleteMenu(@Auth AuthUser authUser, @PathVariable Long menuId, @PathVariable Long storeId) {
+        menuService.deleteMenu(authUser.getUserId(), menuId, storeId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

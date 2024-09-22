@@ -11,12 +11,18 @@ import org.sparta.outsourcingproject.domain.menu.exception.AuthorityMismatchExce
 import org.sparta.outsourcingproject.domain.menu.exception.MenuAlreadyExistsException;
 import org.sparta.outsourcingproject.domain.menu.exception.MenuNotExistsException;
 import org.sparta.outsourcingproject.domain.menu.repository.MenuRepository;
+import org.sparta.outsourcingproject.domain.store.entity.Store;
+import org.sparta.outsourcingproject.domain.store.service.StoreService;
 import org.sparta.outsourcingproject.domain.user.Authority;
 import org.sparta.outsourcingproject.domain.user.entity.User;
 import org.sparta.outsourcingproject.domain.user.repository.UserRepository;
 import org.sparta.outsourcingproject.domain.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +31,7 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final StoreService storeService;
 
     @Transactional
     public MenuResponseDto createMenu(Long userId, MenuRequestDto menuRequestDto) {
@@ -69,6 +76,52 @@ public class MenuService {
 
         //임시 코드
         return new MenuEditResponseDto(updatedMenu);
+    }
+
+    @Transactional
+    public void deleteMenu(Long userId, Long menuId, Long storeId) {
+        // 본인 가게의 메뉴만 삭제가 가능.
+        // Store정보 -> userId가 일치하지 않거나, 사장이 아니라면 권한 X
+        Store store = storeService.findStore(storeId);
+        if (!store.getUser().getId().equals(userId) || !store.getUser().getAuthority().equals(Authority.OWNER)) {
+            throw new AuthorityMismatchException(ErrorCode.AUTHORITY_MISMATCH_ERROR);
+        }
+
+        // 권한 OK -> 가게의 메뉴목록
+        List<Menu> menus = store.getMenus();
+
+        // 메뉴 삭제
+        boolean menuDeleted = menus.stream()
+                .filter(menu -> menu.getId().equals(menuId))
+                .peek(Menu::delete)
+                .findFirst()
+                .isPresent();
+
+        if (!menuDeleted) {
+            throw new MenuNotExistsException(ErrorCode.MENU_NOTEXISTS_ERROR);
+        }
+    }
+
+    // store 작성자와 논의 필요부분.
+    public List<Menu> getFilteredMenus(Long storeId) {
+        // 메뉴는 단독 조회 불가능, 가게 조회 시 함께 조회.
+        // 가게 메뉴 조회시 삭제된 메뉴는 조회 x
+        Store store = storeService.findStore(storeId);
+
+        List<Menu> menus = new ArrayList<>();
+
+        store.getMenus().stream()
+                .filter(menu -> !menu.isStatus()) // status가 false인 메뉴 필터링
+                .forEach(menus::add); // 필터링된 메뉴를 새로운 리스트에 추가
+
+        return menus;
+    }
+
+    // 주문 내역 조회시에는 삭제된 메뉴의 정보도 포함.
+    public List<Menu> getAllMenus(Long storeId) {
+        Store store = storeService.findStore(storeId);
+
+        return store.getMenus();
     }
 
     public Menu getMenu(Long menuId) {
