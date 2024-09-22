@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
+import org.sparta.outsourcingproject.domain.menu.common.FoodType;
+import org.sparta.outsourcingproject.domain.menu.dto.request.MenuEditRequestDto;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 
 @Entity
@@ -19,8 +21,9 @@ public class Menu extends Timestamped {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String type;        // enum 으로 한식, 양식, 중식, 일식, 분식 등 처리해보기
+    private FoodType type;
 
     @Column(nullable = false)
     private int price;
@@ -39,14 +42,14 @@ public class Menu extends Timestamped {
         this.status = true;
     }
 
-    public void update(String name, String type, int price, boolean soldOut) {
-        this.name = name;
-        this.type = type;
-        this.price = price;
-        this.soldOut = soldOut;
+    public void update(MenuEditRequestDto menuEditRequestDto) {
+        this.name = menuEditRequestDto.getName();
+        this.type = menuEditRequestDto.getType();
+        this.price = menuEditRequestDto.getPrice();
+        this.soldOut = menuEditRequestDto.isSoldOut();
     }
 
-    public Menu(String name, String type, int price) {
+    public Menu(String name, FoodType type, int price) {
         this.name = name;
         this.type = type;
         this.price = price;

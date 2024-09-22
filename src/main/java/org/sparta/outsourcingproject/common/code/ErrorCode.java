@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ErrorCode {
+    AUTHORITY_MISMATCH_ERROR(HttpStatus.FORBIDDEN.value(), "올바른 권한을 보유하지 않았습니다."),
+    MENU_ALREADYEXISTS_ERROR(HttpStatus.CONFLICT.value(), "중복된 메뉴입니다."),
+    MENU_NOTEXISTS_ERROR(HttpStatus.NOT_FOUND.value(), "메뉴가 없습니다."),
 
     MISMATCH_PASSWORD_ERROR(HttpStatus.FORBIDDEN.value(), "비밀번호가 일치하지 않습니다."),
 
