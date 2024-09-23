@@ -49,10 +49,11 @@ public class Menu extends Timestamped {
         this.soldOut = menuEditRequestDto.isSoldOut();
     }
 
-    public Menu(String name, FoodType type, int price) {
+    public Menu(String name, FoodType type, int price, Store store) {
         this.name = name;
         this.type = type;
         this.price = price;
+        this.store = store;
         this.soldOut = false;
     }
 }
