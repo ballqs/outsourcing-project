@@ -5,6 +5,7 @@ import org.sparta.outsourcingproject.common.exception.custom.BadRequestException
 import org.sparta.outsourcingproject.common.exception.custom.ConflictException;
 import org.sparta.outsourcingproject.common.exception.custom.ForbiddenException;
 import org.sparta.outsourcingproject.common.exception.custom.NotFoundException;
+import org.sparta.outsourcingproject.domain.user.exception.DuplicateEmailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,22 +19,22 @@ import java.util.List;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity<ErrorResponse> BadRequestHandle(BadRequestException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.value() , e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getStatus() , e.getMessage()));
     }
 
     @ExceptionHandler(value = ConflictException.class)
     public ResponseEntity<ErrorResponse> ConflictHandle(ConflictException e){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(HttpStatus.CONFLICT.value() , e.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getStatus() , e.getMessage()));
     }
 
     @ExceptionHandler(value = ForbiddenException.class)
     public ResponseEntity<ErrorResponse> ForbiddenHandle(ForbiddenException e){
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(HttpStatus.FORBIDDEN.value() , e.getMessage()));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getStatus() , e.getMessage()));
     }
 
     @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<ErrorResponse> NotFoundHandle(NotFoundException e){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(HttpStatus.NOT_FOUND.value() , e.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getStatus() , e.getMessage()));
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
