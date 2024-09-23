@@ -43,8 +43,8 @@ public class UserController {
 
     //회원탈퇴 delete
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto<String>> deleteUser(@Auth AuthUser authUser,@RequestBody DeleteReqestDto deleteReqestDto){
-        userService.deleteUser(authUser,deleteReqestDto);
+    public ResponseEntity<ResponseDto<String>> deleteUser(@Auth AuthUser authUser,@RequestBody DeleteUserRequestDto deleteUserRequestDto){
+        userService.deleteUser(authUser,deleteUserRequestDto);
         return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , null , "회원 탈퇴하였습니다."));
     }
 
