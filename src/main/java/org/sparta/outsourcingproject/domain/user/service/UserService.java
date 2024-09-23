@@ -65,7 +65,7 @@ public class UserService {
         String pw= deleteReqestDto.getPw();
         checkPw(pw, user.getPw());
         //유저 비활성화 코드
-        user.update();
+        user.delete();
     }
 
     public User findUser(Long userId) {

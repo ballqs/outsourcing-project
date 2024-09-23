@@ -4,8 +4,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchProfile;
 import org.sparta.outsourcingproject.common.annotation.Auth;
 import org.sparta.outsourcingproject.common.dto.AuthUser;
 import org.sparta.outsourcingproject.domain.user.dto.DeleteReqestDto;
