@@ -4,7 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewRequestDto;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewResponseDto;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
+import org.sparta.outsourcingproject.domain.review.repository.ReviewRepository;
 import org.sparta.outsourcingproject.domain.review.service.ReviewService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -15,16 +21,22 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ReviewRepository reviewRepository;
 
-    public ReviewController(ReviewService reviewService) {
+    @Autowired
+    public ReviewController(ReviewService reviewService, ReviewRepository reviewRepository) {
         this.reviewService = reviewService;
+        this.reviewRepository = reviewRepository;
     }
 
-//    @PostMapping("/{userId}")
-//    public ReviewResponseDto saveReview(@RequestBody ReviewRequestDto reviewRequestDto) {
-//
-//        return reviewService.saveReview(reviewRequestDto);
-//    }
+    @PostMapping("/review")
+    public ResponseEntity<Review> saveReview(ReviewRequestDto reviewRequestDto) throws IllegalArgumentException {
+        reviewRequestDto.validateFields();
+
+        Review review = reviewService.saveReview(reviewRequestDto);
+        return ResponseEntity.ok(review);
+    }
+    
 
     @GetMapping("/reviews")
     public List<Review> getReviews(
