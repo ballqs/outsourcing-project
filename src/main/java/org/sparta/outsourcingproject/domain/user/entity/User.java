@@ -1,6 +1,5 @@
 package org.sparta.outsourcingproject.domain.user.entity;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -75,8 +74,7 @@ public class User extends Timestamped {
     }
 
     public void update(String pw, PatchUserRequestDto requestDto) {
-
-        this.name = String.valueOf(requestDto.getAuthority() != null ? requestDto.getAuthority() : this.authority);
+        this.authority = requestDto.getAuthority() != null ? requestDto.getAuthority() : this.authority;
         this.phoneNumber = requestDto.getPhoneNumber() != null ? requestDto.getPhoneNumber() : this.phoneNumber;
         this.addressDetail = requestDto.getAddressDetail() != null ? requestDto.getAddressDetail() : this.addressDetail;
         this.zip = requestDto.getZip() != null ? requestDto.getZip() : this.zip;

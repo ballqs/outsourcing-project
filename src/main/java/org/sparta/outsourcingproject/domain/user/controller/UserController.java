@@ -48,7 +48,7 @@ public class UserController {
 
     //회원정보 수정
     @PatchMapping("/update")
-    public ResponseEntity<ResponseDto<String>> updateUser(@Auth AuthUser authUser,@RequestBody PatchUserRequestDto patchUserRequestDto) {
+    public ResponseEntity<ResponseDto<String>> updateUser(@Auth AuthUser authUser,@Valid @RequestBody PatchUserRequestDto patchUserRequestDto) {
         userService.updateUser(authUser,patchUserRequestDto);
         return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value(),null,"수정이 완료 되었습니다."));
     }

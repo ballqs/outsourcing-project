@@ -12,6 +12,8 @@ import org.sparta.outsourcingproject.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -26,7 +28,7 @@ public class UserService {
         if (overlap) {
             throw new DuplicateEmailException(ErrorCode.DUPLICATE_EMAIL_ERROR);
         }
-
+//        checkHp(postUserSignUpRequestDto.getPhoneNumber());
         //비밀번호 벨류체크
         if(!encode.passwordVerification(postUserSignUpRequestDto.getPw())){
             throw new IllegalArgumentException("올바르지 않은 비밀번호 형식입니다.");
@@ -81,6 +83,7 @@ public class UserService {
         }
         //중복된 핸드폰번호 일 경우 예외
         checkHp(requestDto.getPhoneNumber());
+
         String encodePw = encode.encode(requestDto.getNewPw());
         user.update(encodePw,requestDto);
     }
@@ -112,7 +115,8 @@ public class UserService {
 
     //핸드폰번호 중복일때 사용하는 예외 처리
     private void checkHp(String hp){
-        if(userRepository.findByPhoneNumber(hp)){
+        Optional<User> user = userRepository.findByPhoneNumber(hp);
+        if(user.isPresent() && !hp.equals(user.get().getPhoneNumber())){
             throw new DuplicatePhoneNumberException(ErrorCode.DUPLICATE_PHONE_NUMBER_ERROR);
         }
     }
