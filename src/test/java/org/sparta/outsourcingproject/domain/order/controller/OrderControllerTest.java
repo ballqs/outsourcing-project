@@ -71,7 +71,7 @@ class OrderControllerTest {
         doNothing().when(ordersService).changeStatus(any(), anyLong());
 
         // when
-        ResultActions resultActions = mvc.perform(post("/api/orders/change-status/{orderId}" , orderId)
+        ResultActions resultActions = mvc.perform(patch("/api/orders/status/{orderId}" , orderId)
                 .header(HttpHeaders.AUTHORIZATION , token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
