@@ -80,4 +80,9 @@ public class OrdersService {
         }
         return ordersResponseSelectDtos;
     }
+
+    public boolean deliveredCheck(Long orderId) {
+        Orders orders = ordersRepository.findByIdOrThrow(orderId);
+        return orders.getOrdersProcess().equals(OrdersProcessEnum.DELIVERED);
+    }
 }
