@@ -90,13 +90,13 @@ public class UserService {
 
     //id를 사용한 유저 찾기
     public User findUser(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFindException(ErrorCode.DUPLICATE_EMAIL_ERROR));
+        return userRepository.findByIdAndStatusTrue(userId)
+                .orElseThrow(() -> new UserNotFindException(ErrorCode.USER_NOT_FIND_ERROR));
     }
 
     //email값에 맞는 동일한 유저 찾기
     public User findByEmailUser(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFindException(ErrorCode.USER_NOT_FIND_ERROR));
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFindException(ErrorCode.DUPLICATE_EMAIL_ERROR));
     }
 
     //pw가 틀렸을때 예외처리

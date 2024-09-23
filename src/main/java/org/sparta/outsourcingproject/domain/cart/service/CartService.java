@@ -97,6 +97,8 @@ public class CartService {
         if (cartDetails.size() == 0) {
             cartRepository.deleteById(cartDetail.getCart().getId());
         }
+
+        // 삭제시 금액 수정
     }
 
     @Transactional

@@ -46,6 +46,6 @@ public class MenuController {
             @PathVariable Long storeId,
             @PathVariable Long menuId) {
         menuService.deleteMenu(authUser.getUserId(), menuId, storeId);
-        return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , null , "메뉴가 수정되었습니다."));
+        return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , null , "메뉴가 삭제되었습니다."));
     }
 }
