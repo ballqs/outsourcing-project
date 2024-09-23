@@ -2,6 +2,7 @@ package org.sparta.outsourcingproject.domain.store.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 
@@ -10,6 +11,7 @@ import java.time.LocalTime;
  */
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class StoreUpdateRequestDto {
 
     private String name;

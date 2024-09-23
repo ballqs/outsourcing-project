@@ -10,6 +10,7 @@ import org.sparta.outsourcingproject.domain.store.dto.request.StoreListRequestDt
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreUpdateRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.response.StoreCreateResponseDto;
 import org.sparta.outsourcingproject.domain.store.dto.response.StoreGetResponseDto;
+import org.sparta.outsourcingproject.domain.store.dto.response.StoreResponseDto;
 import org.sparta.outsourcingproject.domain.store.service.StoreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +39,8 @@ public class StoreController {
      * 가게 단건 조회 API(가게 메뉴 포함)
      */
     @GetMapping("/{storeId}")
-    public ResponseDto<StoreGetResponseDto> getStore(@PathVariable Long id) {
-        StoreGetResponseDto res = storeService.getStore(id);
+    public ResponseDto<StoreGetResponseDto> getStore(@PathVariable Long storeId) {
+        StoreGetResponseDto res = storeService.getStore(storeId);
         return new ResponseDto<>(HttpStatus.CREATED.value(), res, "가게 단건 조회에 성공하였습니다!");
     }
 
@@ -47,16 +48,17 @@ public class StoreController {
      * 가게 다건 조회 API(가게 메뉴 포함 X)
      */
     @GetMapping
-    public ResponseDto<List<StoreCreateResponseDto>> getStores(@RequestBody StoreListRequestDto requestDto) {
-        List<StoreCreateResponseDto> res = storeService.getStores(requestDto);
+    public ResponseDto<List<StoreResponseDto>> getStores(@RequestBody StoreListRequestDto requestDto) {
+        List<StoreResponseDto> res = storeService.getStores(requestDto);
         return new ResponseDto<>(HttpStatus.OK.value(), res, "해당 이름을 포함하는 모든 가게 조회에 성공하였습니다.");
     }
 
     /**
      * 가게 정보 수정 API
      */
-    public ResponseDto<StoreGetResponseDto> updateStoreInfo(@RequestBody StoreUpdateRequestDto requestDto, @PathVariable Long id) {
-        StoreGetResponseDto res = storeService.updateStoreInfo(requestDto, id);
+    @PatchMapping("/{storeId}")
+    public ResponseDto<StoreGetResponseDto> updateStoreInfo(@RequestBody StoreUpdateRequestDto requestDto, @PathVariable Long storeId) {
+        StoreGetResponseDto res = storeService.updateStoreInfo(requestDto, storeId);
         return new ResponseDto<>(HttpStatus.OK.value(), res, "가게 정보가 성공적으로 수정되었습니다.");
     }
 
@@ -64,8 +66,8 @@ public class StoreController {
      * 가게 폐업 처리 API
      */
     @PatchMapping("/shutdown/{storeId}")
-    public ResponseDto shutdownStore(@PathVariable Long id) {
-        storeService.setShutdownStore(id);
+    public ResponseDto shutdownStore(@PathVariable Long storeId) {
+        storeService.setShutdownStore(storeId);
         return new ResponseDto<>(HttpStatus.OK.value(), null, "해당 가게가 폐업 상태로 전환되었습니다");
     }
 

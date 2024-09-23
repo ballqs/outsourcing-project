@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ErrorCode {
+    AUTHORITY_MISMATCH_ERROR(HttpStatus.FORBIDDEN.value(), "올바른 권한을 보유하지 않았습니다."),
+    MENU_ALREADYEXISTS_ERROR(HttpStatus.CONFLICT.value(), "중복된 메뉴입니다."),
+    MENU_NOTEXISTS_ERROR(HttpStatus.NOT_FOUND.value(), "메뉴가 없습니다."),
 
     // 400
     STORE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "해당 ID를 가진 가게를 찾을 수 없습니다"),
@@ -18,6 +21,7 @@ public enum ErrorCode {
     FORBIDDEN_CART_MODIFICATION(HttpStatus.FORBIDDEN.value(), "본인의 장바구니가 아닌 것은 수정 불가능합니다."),
     FORBIDDEN_CART_DELETION(HttpStatus.FORBIDDEN.value(), "본인이 아니면 삭제가 불가능합니다."),
     FORBIDDEN_ORDER_STATUS_CHANGE(HttpStatus.FORBIDDEN.value(), "본인의 가게의 주문이 아니면 상태전환이 불가능합니다."),
+    USER_NOT_ACTIVE_ERROR(HttpStatus.FORBIDDEN.value(), "사용자 비활성화 상태입니다."),
 
     // 404
     USER_NOT_FIND_ERROR(HttpStatus.NOT_FOUND.value(), "유저가 없습니다."),
@@ -30,6 +34,7 @@ public enum ErrorCode {
 
     // 500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(),"서버 에러");
+
 
 
     private final int status;

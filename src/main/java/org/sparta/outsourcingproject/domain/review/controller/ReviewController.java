@@ -1,15 +1,16 @@
 package org.sparta.outsourcingproject.domain.review.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewRequestDto;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewResponseDto;
+import org.sparta.outsourcingproject.domain.review.entity.Review;
 import org.sparta.outsourcingproject.domain.review.service.ReviewService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
+@Slf4j
 @RestController("/api/store")
 public class ReviewController {
 
@@ -20,13 +21,19 @@ public class ReviewController {
     }
 
 //    @PostMapping("/{userId}")
-//    public String saveReview(@RequestBody ReviewRequestDto reviewRequestDto) {
+//    public ReviewResponseDto saveReview(@RequestBody ReviewRequestDto reviewRequestDto) {
 //
 //        return reviewService.saveReview(reviewRequestDto);
 //    }
-//
-//    @GetMapping("/reviews")
-//    public List<ReviewResponseDto> getReviews() {
-//        return reviewService.getReviews();
-//    }
+
+    @GetMapping("/reviews")
+    public List<Review> getReviews(
+        @RequestParam("storeId") Long storeId,
+        @RequestParam("min") int minRating,
+        @RequestParam("max") int maxRating
+    ) {
+        //테스트 용
+//        log.info("storeId : {}, min : {}, max : {}", storeId, minRating, maxRating);
+        return reviewService.getReviews(storeId, minRating, maxRating);
+    }
 }
