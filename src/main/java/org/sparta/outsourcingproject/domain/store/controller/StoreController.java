@@ -4,6 +4,7 @@ package org.sparta.outsourcingproject.domain.store.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.sparta.outsourcingproject.common.annotation.Permission;
 import org.sparta.outsourcingproject.common.dto.ResponseDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreCreateRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreListRequestDto;
@@ -28,6 +29,8 @@ public class StoreController {
     /**
      * 가게 등록 API
      */
+
+    @Permission
     @PostMapping
     public ResponseDto<StoreCreateResponseDto> createStore(@RequestBody StoreCreateRequestDto requestDto, HttpServletRequest httpServletRequest) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
@@ -56,6 +59,8 @@ public class StoreController {
     /**
      * 가게 정보 수정 API
      */
+
+    @Permission
     @PatchMapping("/{storeId}")
     public ResponseDto<StoreGetResponseDto> updateStoreInfo(@RequestBody StoreUpdateRequestDto requestDto, @PathVariable Long storeId) {
         StoreGetResponseDto res = storeService.updateStoreInfo(requestDto, storeId);
@@ -65,6 +70,8 @@ public class StoreController {
     /**
      * 가게 폐업 처리 API
      */
+
+    @Permission
     @PatchMapping("/shutdown/{storeId}")
     public ResponseDto shutdownStore(@PathVariable Long storeId) {
         storeService.setShutdownStore(storeId);

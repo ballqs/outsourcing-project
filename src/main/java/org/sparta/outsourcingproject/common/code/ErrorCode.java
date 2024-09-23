@@ -22,6 +22,7 @@ public enum ErrorCode {
     FORBIDDEN_CART_DELETION(HttpStatus.FORBIDDEN.value(), "본인이 아니면 삭제가 불가능합니다."),
     FORBIDDEN_ORDER_STATUS_CHANGE(HttpStatus.FORBIDDEN.value(), "본인의 가게의 주문이 아니면 상태전환이 불가능합니다."),
     USER_NOT_ACTIVE_ERROR(HttpStatus.FORBIDDEN.value(), "사용자 비활성화 상태입니다."),
+    FORBIDDEN_NO_PERMISSION(HttpStatus.FORBIDDEN.value() , "접근 권한이 없습니다."),
 
     // 404
     USER_NOT_FIND_ERROR(HttpStatus.NOT_FOUND.value(), "유저가 없습니다."),
