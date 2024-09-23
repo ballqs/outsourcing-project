@@ -1,5 +1,6 @@
 package org.sparta.outsourcingproject.domain.review.repository;
 
+
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +15,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByStoreIdAndStarBetweenOrderByCreatedAtDesc(Long storeId, int minRating, int maxRating);
     // 가게 ID로 리뷰 조회 (최신순 정렬 포함)
     List<Review> findByCreatedAtDesc(Long storeId);
-
 
 }
 

@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
+import org.sparta.outsourcingproject.domain.menu.common.FoodType;
+import org.sparta.outsourcingproject.domain.menu.dto.request.MenuEditRequestDto;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 
 @Entity
@@ -17,37 +19,38 @@ public class Menu extends Timestamped {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String field;
+    private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String type;        // enum 으로 한식, 양식, 중식, 일식, 분식 등 처리해보기
+    private FoodType type;
 
     @Column(nullable = false)
     private int price;
 
-    @Column
+    @Column(nullable = false)
     private boolean soldOut;
+
+    @Column(nullable = false)  // 삭제 여부 (soft delete) default = false;
+    private boolean status = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    // 삭제 여부 (soft delete) default = false;
-    private boolean status = false;
-
     public void delete() {
         this.status = true;
     }
 
-    public void update(String field, String type, int price, boolean soldOut) {
-        this.field = field;
-        this.type = type;
-        this.price = price;
-        this.soldOut = soldOut;
+    public void update(MenuEditRequestDto menuEditRequestDto) {
+        this.name = menuEditRequestDto.getName();
+        this.type = menuEditRequestDto.getType();
+        this.price = menuEditRequestDto.getPrice();
+        this.soldOut = menuEditRequestDto.isSoldOut();
     }
 
-    public Menu(String field, String type, int price) {
-        this.field = field;
+    public Menu(String name, FoodType type, int price) {
+        this.name = name;
         this.type = type;
         this.price = price;
         this.soldOut = false;

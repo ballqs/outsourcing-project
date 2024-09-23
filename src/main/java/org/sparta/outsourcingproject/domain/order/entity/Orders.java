@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
+import org.sparta.outsourcingproject.domain.cart.entity.Cart;
+import org.sparta.outsourcingproject.domain.review.entity.Review;
+import org.sparta.outsourcingproject.domain.store.entity.Store;
+import org.sparta.outsourcingproject.domain.user.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +43,35 @@ public class Orders extends Timestamped {
     @Column(nullable = false)
     private int totalAmt;
 
-    private Long userId;  // user 외래키
-    private Long storeId; // store 외래키
-
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(mappedBy = "orders" , orphanRemoval = true)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id" , nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id" , nullable = false)
+    private Store store;
+
+    @OneToOne(mappedBy = "orders")
+    private Review review;
+
     public void updateOrdersProcess(OrdersProcessEnum ordersProcess) {
         this.ordersProcess = ordersProcess;
+    }
+
+    public static Orders CreateOrders(User user , Cart cart) {
+        Orders orders = new Orders();
+        orders.userTel = user.getPhoneNumber();
+        orders.zip = user.getZip();
+        orders.address = user.getAddress();
+        orders.addressDetail = user.getAddressDetail();
+        orders.ordersProcess = OrdersProcessEnum.ORDER;
+        orders.totalAmt = cart.getTotalAmt();
+        orders.user = cart.getUser();
+        orders.store = cart.getStore();
+        return orders;
     }
 }

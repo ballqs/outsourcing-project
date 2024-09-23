@@ -1,11 +1,10 @@
 package org.sparta.outsourcingproject.domain.user.dto;
 
 import lombok.Getter;
+import org.sparta.outsourcingproject.domain.user.Authority;
 
 @Getter
-public class PostUserSaveRequestDto {
+public class PostUserSignInRequestDto {
     private String email;
-    private String name;
     private String pw;
-    private String phoneNumber;
 }

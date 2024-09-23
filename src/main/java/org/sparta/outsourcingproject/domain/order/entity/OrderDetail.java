@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
 import org.sparta.outsourcingproject.domain.cart.entity.CartDetail;
+import org.sparta.outsourcingproject.domain.menu.entity.Menu;
 
 @Getter
 @NoArgsConstructor
@@ -24,17 +25,19 @@ public class OrderDetail extends Timestamped {
     @Column(nullable = false)
     private int cnt;
 
-    private Long menuId; // menu 외래키
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id" , nullable = false)
     private Orders orders;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_id" , nullable = false)
+    private Menu menu;
 
     public OrderDetail(Orders orders ,CartDetail cartDetail) {
         this.menuName = cartDetail.getMenuName();
         this.menuPrice = cartDetail.getMenuPrice();
         this.cnt = cartDetail.getCnt();
-        this.menuId = cartDetail.getMenuId();
+        this.menu = cartDetail.getMenu();
         this.orders = orders;
     }
 }

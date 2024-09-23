@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.sparta.outsourcingproject.domain.user.Authority;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -32,13 +33,15 @@ public class JwtUtil {
     }
 
     /* 토큰 생성 */
-    public String createToken(Long userId, String email) {
-        Date date = new Date();
+    //권한추가
 
+    public String createToken(Long userId, String email,Authority authority) {
+        Date date = new Date();
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(String.valueOf(userId))
                         .claim("email", email)
+                        .claim("authority", authority.name())
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date) // 발급일
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘
@@ -56,7 +59,7 @@ public class JwtUtil {
 
     /* JWT 안에 있는 데이터를 추출 */
     public Claims extractClaims(String token) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)

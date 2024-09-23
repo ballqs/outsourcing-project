@@ -1,19 +1,25 @@
 package org.sparta.outsourcingproject.domain.review.service;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewRequestDto;
+import lombok.RequiredArgsConstructor;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewResponseDto;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
 import org.sparta.outsourcingproject.domain.review.repository.ReviewRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Slf4j
 @Component
+@RequiredArgsConstructor
+@Service
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;

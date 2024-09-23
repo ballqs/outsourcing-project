@@ -1,5 +1,6 @@
 package org.sparta.outsourcingproject.domain.review.entity;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,8 +32,4 @@ public class Review extends Timestamped {
         this.star = star;
         this.contents = contents;
     }
-
-
-
 }
-
