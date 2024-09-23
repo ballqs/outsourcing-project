@@ -15,7 +15,7 @@ public enum ErrorCode {
 
     BAD_REQUEST_MINIMUM_ORDER_NOT_MET(HttpStatus.BAD_REQUEST.value(), "최소 주문 금액보다 작습니다."),
     CONFLICT_DELIVERY_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST.value(), "이미 배달완료된 건입니다."),
-
+    SAME_PASSWORD(HttpStatus.BAD_REQUEST.value(), "바꾸려는 비밀번호가 기존과 동일합니다."),
     // 403
     MISMATCH_PASSWORD_ERROR(HttpStatus.FORBIDDEN.value(), "비밀번호가 일치하지 않습니다."),
     FORBIDDEN_CART_MODIFICATION(HttpStatus.FORBIDDEN.value(), "본인의 장바구니가 아닌 것은 수정 불가능합니다."),
@@ -35,10 +35,10 @@ public enum ErrorCode {
     // 409
     DUPLICATE_EMAIL_ERROR(HttpStatus.CONFLICT.value(),"중복된 이메일입니다."),
     TOO_MANY_STORE_REGISTERED(HttpStatus.CONFLICT.value(), "한 명당 최대 3개까지의 가게만 운영할 수 있습니다."),
+    DUPLICATE_PHONE_NUMBER_ERROR(HttpStatus.CONFLICT.value(),"중복된 핸드폰번호입니다."),
 
     // 410(Gone)
     STORE_ALREAY_SHUTDOWN(HttpStatus.GONE.value(), "이미 폐업한 가게이므로 조회할 수 없습니다."),
-
 
     // 500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(),"서버 에러");
