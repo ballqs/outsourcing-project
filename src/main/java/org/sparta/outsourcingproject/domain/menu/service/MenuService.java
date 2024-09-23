@@ -48,7 +48,7 @@ public class MenuService {
         }
 
         // 메뉴 생성
-        Menu menu = new Menu(menuRequestDto.getName(), menuRequestDto.getType(), menuRequestDto.getPrice());
+        Menu menu = new Menu(menuRequestDto.getName(), menuRequestDto.getType(), menuRequestDto.getPrice(), store);
 
         // 메뉴 저장
         Menu savedMenu = menuRepository.save(menu);
