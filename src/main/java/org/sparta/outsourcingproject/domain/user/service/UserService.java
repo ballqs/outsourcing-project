@@ -88,6 +88,7 @@ public class UserService {
         return new GetProfileResponseDto(user);
     }
 
+    //id를 사용한 유저 찾기
     public User findUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFindException(ErrorCode.DUPLICATE_EMAIL_ERROR));
@@ -98,18 +99,21 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFindException(ErrorCode.USER_NOT_FIND_ERROR));
     }
 
+    //pw가 틀렸을때 예외처리
     private void checkPw(String userPw, String enPw) {
         if (!encode.matches(userPw, enPw)) {
             throw new MismatchPasswordException(ErrorCode.MISMATCH_PASSWORD_ERROR);
         }
     }
 
+    //핸드폰번호 중복일때 사용하는 예외 처리
     private void checkHp(String hp){
         if(userRepository.findByPhoneNumber(hp)){
             throw new DuplicatePhoneNumberException(ErrorCode.DUPLICATE_PHONE_NUMBER_ERROR);
         }
     }
 
+    //회원 탈퇴 상태일때 로그인시도 예외처리
     private void checkStatus(User user){
         if(!user.isStatus()){
             throw new UserNotActiveException(ErrorCode.USER_NOT_FIND_ERROR);
