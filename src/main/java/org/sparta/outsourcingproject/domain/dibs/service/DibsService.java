@@ -2,10 +2,13 @@ package org.sparta.outsourcingproject.domain.dibs.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.sparta.outsourcingproject.common.code.ErrorCode;
 import org.sparta.outsourcingproject.domain.dibs.dto.DibsResponseDto;
 import org.sparta.outsourcingproject.domain.dibs.entity.Dibs;
+import org.sparta.outsourcingproject.domain.dibs.exception.NotFoundDibs;
 import org.sparta.outsourcingproject.domain.dibs.repository.DibsRepository;
 import org.sparta.outsourcingproject.domain.store.dto.response.StoreResponseDto;
+import org.sparta.outsourcingproject.domain.store.exception.StoreNotFoundException;
 import org.sparta.outsourcingproject.domain.store.repository.StoreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +38,7 @@ public class DibsService {
     @Transactional
     public String deleteDibs(Long storeId, Long userId) {
         dibsRepository.deleteByIdStoreIdAndIdUserId(storeId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 찜은 존재하지 않습니다"));
+                .orElseThrow(() -> new NotFoundDibs(ErrorCode.DIBS_NOT_FOUND));
 
         return "해당 가게를 찜 목록에서 삭제하였습니다.";
     }
@@ -45,7 +48,7 @@ public class DibsService {
         return dibsRepository.findByIdUserId(userId).stream()
                 .map(dibs -> dibs.getId().getStoreId())  // storeId 추출
                 .map(storeId -> storeRepository.findById(storeId)  // storeId로 가게 조회
-                        .orElseThrow(() -> new IllegalArgumentException("해당 가게가 존재하지 않습니다.")))
+                        .orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND)))
                 .map(StoreResponseDto::of)  // Store 엔티티를 StoreResponseDto로 변환
                 .collect(Collectors.toList());
     }

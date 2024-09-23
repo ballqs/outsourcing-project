@@ -1,5 +1,8 @@
 package org.sparta.outsourcingproject.domain.review.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.common.dto.ResponseDto;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewRequestDto;
@@ -15,13 +18,14 @@ import java.util.List;
 
 @Slf4j
 @RestController("/api/store")
+@RequiredArgsConstructor
 public class ReviewController {
 
     private final ReviewService reviewService;
 
-    public ReviewController(ReviewService reviewService) {
-        this.reviewService = reviewService;
-    }
+//    public ReviewController(ReviewService reviewService) {
+//        this.reviewService = reviewService;
+//    }
 
 //    @PostMapping("/{userId}")
 //    public ReviewResponseDto saveReview(@RequestBody ReviewRequestDto reviewRequestDto) {
