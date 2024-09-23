@@ -10,6 +10,7 @@ import org.sparta.outsourcingproject.domain.menu.dto.request.MenuEditRequestDto;
 import org.sparta.outsourcingproject.domain.menu.dto.response.MenuEditResponseDto;
 import org.sparta.outsourcingproject.domain.menu.dto.request.MenuRequestDto;
 import org.sparta.outsourcingproject.domain.menu.dto.response.MenuResponseDto;
+import org.sparta.outsourcingproject.domain.menu.entity.Menu;
 import org.sparta.outsourcingproject.domain.menu.service.MenuService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;

@@ -32,15 +32,15 @@ public class Menu extends Timestamped {
     @Column(nullable = false)
     private boolean soldOut;
 
-    @Column(nullable = false)  // 삭제 여부 (soft delete) default = false;
-    private boolean status = false;
+    @Column(nullable = false)  // 삭제 여부 (soft delete) default = true; 상태가 true이다 -> 살아있다.
+    private boolean status = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
     public void delete() {
-        this.status = true;
+        this.status = false;
     }
 
     public void update(MenuEditRequestDto menuEditRequestDto) {
@@ -50,10 +50,10 @@ public class Menu extends Timestamped {
         this.soldOut = menuEditRequestDto.isSoldOut();
     }
 
-    public Menu(MenuRequestDto menuRequestDto, Store store) {
-        this.name = menuRequestDto.getName();
-        this.type = menuRequestDto.getType();
-        this.price = menuRequestDto.getPrice();
+    public Menu(String name, FoodType type, int price, Store store) {
+        this.name = name;
+        this.type = type;
+        this.price = price;
         this.store = store;
         this.soldOut = false;
     }
