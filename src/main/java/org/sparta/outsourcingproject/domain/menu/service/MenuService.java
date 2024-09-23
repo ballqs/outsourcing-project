@@ -53,8 +53,8 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuEditResponseDto updateMenu(Long userId, MenuEditRequestDto menuEditRequestDto, Long menuId) {
-
+    public MenuEditResponseDto updateMenu(Long userId, MenuEditRequestDto menuEditRequestDto, Long storeId, Long menuId) {
+        // 메뉴 수정은 사장님만 가능.
         User user = userService.findUser(userId);
 
         // 수정할 메뉴 존재 유무 확인.
@@ -63,7 +63,7 @@ public class MenuService {
         }
 
         // 메뉴 내용을 변경 - dirty checking으로 자동 반영.
-        Menu updatedMenu = getMenu(menuId);
+        Menu updatedMenu = getMenu(storeId , menuId);
 
         updatedMenu.update(menuEditRequestDto);
 
@@ -117,7 +117,7 @@ public class MenuService {
         return store.getMenus();
     }
 
-    public Menu getMenu(Long menuId) {
-        return menuRepository.findById(menuId).orElseThrow(() -> new MenuNotExistsException(ErrorCode.MENU_NOTEXISTS_ERROR));
+    public Menu getMenu(Long storeId , Long menuId) {
+        return menuRepository.findByIdAndStoreId(menuId , storeId).orElseThrow(() -> new MenuNotExistsException(ErrorCode.MENU_NOTEXISTS_ERROR));
     }
 }
