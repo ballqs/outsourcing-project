@@ -40,7 +40,7 @@ public class UserController {
     }
 
     //회원탈퇴 delete
-    @PatchMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<PostUserResponseDto> deleteUser(@Auth AuthUser authUser,@RequestBody DeleteReqestDto deleteReqestDto){
         userService.deleteUser(authUser,deleteReqestDto);
         return ResponseEntity.ok(new PostUserResponseDto(HttpStatus.OK, "회원 탈퇴하였습니다."));
