@@ -127,8 +127,7 @@ public class CartService {
     }
 
     public CartResponseSelectDto getCarts(Long userId) {
-        Optional<Cart> opCart = cartRepository.findByUserId(userId);
-        Cart cart = opCart.get();
+        Cart cart = cartRepository.findByUserId(userId).orElse(new Cart());
         CartSelectDto cartSelectDto = new CartSelectDto(cart);
         List<CartDetail> cartDetails = cartDetailService.getAllCartDetails(cart.getId());
         List<CartDetailSelectDto> cartDetailSelectDtos = cartDetails.stream().map(CartDetailSelectDto::new).toList();

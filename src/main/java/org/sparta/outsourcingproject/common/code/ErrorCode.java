@@ -16,6 +16,8 @@ public enum ErrorCode {
     BAD_REQUEST_MINIMUM_ORDER_NOT_MET(HttpStatus.BAD_REQUEST.value(), "최소 주문 금액보다 작습니다."),
     CONFLICT_DELIVERY_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST.value(), "이미 배달완료된 건입니다."),
     SAME_PASSWORD(HttpStatus.BAD_REQUEST.value(), "바꾸려는 비밀번호가 기존과 동일합니다."),
+    ORDER_CANCELLED(HttpStatus.BAD_REQUEST.value(), "주문이 취소된 건입니다."),
+
     // 403
     MISMATCH_PASSWORD_ERROR(HttpStatus.FORBIDDEN.value(), "비밀번호가 일치하지 않습니다."),
     FORBIDDEN_CART_MODIFICATION(HttpStatus.FORBIDDEN.value(), "본인의 장바구니가 아닌 것은 수정 불가능합니다."),

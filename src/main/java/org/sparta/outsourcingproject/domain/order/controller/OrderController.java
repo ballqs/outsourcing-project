@@ -25,6 +25,12 @@ public class OrderController {
         return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , null , "주문 상태를 변경했습니다."));
     }
 
+    @PatchMapping("/cancel/{orderId}")
+    public ResponseEntity<ResponseDto<String>> cancel(@Auth AuthUser authUser , @PathVariable Long orderId) {
+        ordersService.cancel(authUser.getUserId() , orderId);
+        return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , null , "주문을 취소했습니다."));
+    }
+
     @GetMapping("/{orderId}")
     public ResponseEntity<ResponseDto<OrdersResponseSelectDto>> getOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , ordersService.getOrder(orderId) , "주문을 조회했습니다."));
