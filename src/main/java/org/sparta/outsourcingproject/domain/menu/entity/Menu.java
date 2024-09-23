@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
 import org.sparta.outsourcingproject.domain.menu.common.FoodType;
 import org.sparta.outsourcingproject.domain.menu.dto.request.MenuEditRequestDto;
+import org.sparta.outsourcingproject.domain.menu.dto.request.MenuRequestDto;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 
 @Entity
@@ -49,10 +50,10 @@ public class Menu extends Timestamped {
         this.soldOut = menuEditRequestDto.isSoldOut();
     }
 
-    public Menu(String name, FoodType type, int price, Store store) {
-        this.name = name;
-        this.type = type;
-        this.price = price;
+    public Menu(MenuRequestDto menuRequestDto, Store store) {
+        this.name = menuRequestDto.getName();
+        this.type = menuRequestDto.getType();
+        this.price = menuRequestDto.getPrice();
         this.store = store;
         this.soldOut = false;
     }
