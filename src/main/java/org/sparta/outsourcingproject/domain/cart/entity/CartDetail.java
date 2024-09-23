@@ -31,16 +31,16 @@ public class CartDetail {
     @JoinColumn(name = "menu_id" , nullable = false)
     private Menu menu;
 
-    public CartDetail(Cart cart , Long menuId , String menuName , int menuPrice , int cnt) {
+    public CartDetail(Cart cart , Menu menu , String menuName , int menuPrice , int cnt) {
         this.cart = cart;
-//        this.menuId = menuId;
+        this.menu = menu;
         this.menuName = menuName;
         this.menuPrice = menuPrice;
         this.cnt = cnt;
     }
 
-    public void update(Long menuId , String menuName , int menuPrice , int cnt) {
-//        this.menuId = menuId;
+    public void update(Menu menu , String menuName , int menuPrice , int cnt) {
+        this.menu = menu;
         this.menuName = menuName;
         this.menuPrice = menuPrice;
         this.cnt = cnt;

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
+import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.user.entity.User;
@@ -59,5 +60,18 @@ public class Orders extends Timestamped {
 
     public void updateOrdersProcess(OrdersProcessEnum ordersProcess) {
         this.ordersProcess = ordersProcess;
+    }
+
+    public static Orders CreateOrders(User user , Cart cart) {
+        Orders orders = new Orders();
+        orders.userTel = user.getPhoneNumber();
+        orders.zip = user.getZip();
+        orders.address = user.getAddress();
+        orders.addressDetail = user.getAddressDetail();
+        orders.ordersProcess = OrdersProcessEnum.ORDER;
+        orders.totalAmt = cart.getTotalAmt();
+        orders.user = cart.getUser();
+        orders.store = cart.getStore();
+        return orders;
     }
 }
