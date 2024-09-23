@@ -2,9 +2,13 @@ package org.sparta.outsourcingproject.domain.cart.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.sparta.outsourcingproject.common.code.ErrorCode;
+import org.sparta.outsourcingproject.common.exception.custom.NotFoundException;
 import org.sparta.outsourcingproject.domain.cart.dto.*;
 import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.cart.entity.CartDetail;
+import org.sparta.outsourcingproject.domain.cart.exception.CartUnauthorizedException;
+import org.sparta.outsourcingproject.domain.cart.exception.MinimumOrderAmountException;
 import org.sparta.outsourcingproject.domain.cart.java.CartDetailEvent;
 import org.sparta.outsourcingproject.domain.cart.repository.CartRepository;
 import org.sparta.outsourcingproject.domain.menu.entity.Menu;
@@ -17,7 +21,6 @@ import org.sparta.outsourcingproject.domain.user.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -74,7 +77,7 @@ public class CartService {
         CartDetail cartDetail = cartDetailService.getCartDetail(cartDetailId);
         Cart cart = cartDetail.getCart();
         if (!userId.equals(cart.getUser().getId())) {
-            throw new IllegalArgumentException("본인의 장바구니가 아닌 것은 수정 불가능합니다.");
+            throw new CartUnauthorizedException(ErrorCode.FORBIDDEN_CART_MODIFICATION);
         }
 
         Long menuId = cartDetailUpdateDto.getMenuId();
@@ -95,7 +98,7 @@ public class CartService {
         CartDetail cartDetail = cartDetailService.getCartDetail(cartDetailId);
 
         if (!userId.equals(cartDetail.getCart().getUser().getId())) {
-            throw new IllegalArgumentException("본인이 아니면 삭제가 불가능합니다.");
+            throw new CartUnauthorizedException(ErrorCode.FORBIDDEN_CART_DELETION);
         }
 
         cartDetailService.deleteCartDetail(cartDetailId);
@@ -110,7 +113,7 @@ public class CartService {
         Optional<Cart> opCart = cartRepository.findByUserId(userId);
 
         if (opCart.isEmpty()) {
-            throw new IllegalArgumentException("장바구니 정보가 없습니다.");
+            throw new NotFoundException(ErrorCode.CART_NOT_FOUND);
         }
         Cart cart = opCart.get();
 
@@ -118,13 +121,13 @@ public class CartService {
         int cartSize = cartRepository.countByUserId(userId);
         int cartDetailSize = cartDetailService.countCartDetail(cart.getId());
         if (cartSize < 1 || cartDetailSize < 1) {
-            throw new IllegalArgumentException("장바구니 정보가 없습니다.");
+            throw new NotFoundException(ErrorCode.CART_NOT_FOUND);
         }
 
         // 최소 주문금액을 넘겼는지?
         Store store = storeService.findStore(cart.getStore().getId());
         if (cart.getTotalAmt() < store.getMinPrice()) {
-            throw new IllegalArgumentException("최소 주문 금액보다 작습니다.");
+            throw new MinimumOrderAmountException(ErrorCode.BAD_REQUEST_MINIMUM_ORDER_NOT_MET);
         }
 
         // 주문 완료 작업
