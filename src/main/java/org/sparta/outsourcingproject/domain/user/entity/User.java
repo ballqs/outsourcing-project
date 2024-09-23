@@ -8,6 +8,7 @@ import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.user.Authority;
+import org.sparta.outsourcingproject.domain.user.dto.PatchUserRequestDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSignUpRequestDto;
 
 import java.util.ArrayList;
@@ -70,5 +71,14 @@ public class User extends Timestamped {
 
     public void delete() {
         this.status = false;
+    }
+
+    public void update(String pw, PatchUserRequestDto requestDto) {
+        this.pw = pw;
+        this.authority = requestDto.getAuthority();
+        this.phoneNumber = requestDto.getPhoneNumber();
+        this.address = requestDto.getAddress();
+        this.addressDetail = requestDto.getAddressDetail();
+        this.zip = requestDto.getZip();
     }
 }
