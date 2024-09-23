@@ -3,20 +3,20 @@ package org.sparta.outsourcingproject.domain.user.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sparta.outsourcingproject.common.dto.ResponseDto;
-import org.sparta.outsourcingproject.domain.user.dto.PostUserSaveRequestDto;
-import org.sparta.outsourcingproject.domain.user.dto.PostUserSaveResponseDto;
+import lombok.extern.slf4j.Slf4j;
+import org.sparta.outsourcingproject.common.annotation.Auth;
+import org.sparta.outsourcingproject.common.dto.AuthUser;
+import org.sparta.outsourcingproject.domain.user.dto.DeleteReqestDto;
+import org.sparta.outsourcingproject.domain.user.dto.PostUserResponseDto;
+import org.sparta.outsourcingproject.domain.user.dto.PostUserSignInRequestDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSignUpRequestDto;
 import org.sparta.outsourcingproject.domain.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -24,17 +24,25 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/signIn")
-    public ResponseEntity <PostUserSaveResponseDto> signInUser(@Valid @RequestBody PostUserSaveRequestDto postUserSaveRequestDto){
-        userService.signInUser(postUserSaveRequestDto);
-        return ResponseEntity.ok(new PostUserSaveResponseDto(HttpStatus.OK, "회원가입에 성공했습니다"));
+    //회원가입 sign up
+    @PostMapping("/signup")
+    public ResponseEntity <PostUserResponseDto> signUpUser(@RequestBody PostUserSignUpRequestDto postUserSignUpRequestDto){
+        userService.signUpUser(postUserSignUpRequestDto);
+        return ResponseEntity.ok(new PostUserResponseDto(HttpStatus.OK, "회원가입에 성공했습니다"));
     }
 
-    @PostMapping("/signUp")
-    public ResponseEntity<PostUserSaveResponseDto> signUpUser(@Valid @RequestBody PostUserSignUpRequestDto postUserSignUpRequestDto, HttpServletResponse response){
-        String token = userService.signUpUser(postUserSignUpRequestDto);
+    //로그인 sign in
+    @PostMapping("/signin")
+    public ResponseEntity<PostUserResponseDto> signInUser(@Valid @RequestBody PostUserSignInRequestDto postUserSignInRequestDto, HttpServletResponse response){
+        String token = userService.signInUser(postUserSignInRequestDto);
         response.addHeader("ACCESS_TOKEN",token);
-        return ResponseEntity.ok(new PostUserSaveResponseDto(HttpStatus.OK, "로그인에 성공했습니다."));
+        return ResponseEntity.ok(new PostUserResponseDto(HttpStatus.OK, "로그인에 성공했습니다."));
     }
 
+    //회원탈퇴 delete
+    @DeleteMapping("/delete")
+    public ResponseEntity<PostUserResponseDto> deleteUser(@Auth AuthUser authUser,@RequestBody DeleteReqestDto deleteReqestDto){
+        userService.deleteUser(authUser,deleteReqestDto);
+        return ResponseEntity.ok(new PostUserResponseDto(HttpStatus.OK, "회원 탈퇴하였습니다."));
+    }
 }

@@ -7,7 +7,8 @@ import org.sparta.outsourcingproject.common.entity.Timestamped;
 import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
-import org.sparta.outsourcingproject.domain.user.dto.PostUserSaveRequestDto;
+import org.sparta.outsourcingproject.domain.user.Authority;
+import org.sparta.outsourcingproject.domain.user.dto.PostUserSignUpRequestDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +25,16 @@ public class User extends Timestamped {
 
     @Column(name = "email", unique = true)
     private String email;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String pw;
     @Column(name = "phoneNumber", unique = true)
     private String phoneNumber;
 
-    // 여기는 ENUM 사용해주시길 바랍니다.
     @Column(nullable = false)
-    private String authority;
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
     @Column(nullable = false)
     private String zip;
@@ -53,10 +56,19 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user" , orphanRemoval = true)
     private List<Orders> orders = new ArrayList<>();
 
-    public User(PostUserSaveRequestDto requestDto, String pw) {
+    public User(PostUserSignUpRequestDto requestDto, String pw) {
         this.email = requestDto.getEmail();
         this.name = requestDto.getName();
         this.pw = pw;
+        this.zip = requestDto.getZip();
+        this.address = requestDto.getAddress();
+        this.addressDetail = requestDto.getAddressDetail();
         this.phoneNumber = requestDto.getPhoneNumber();
+        this.authority = requestDto.getAuthority();
+        this.status = true;
+    }
+
+    public void delete() {
+        this.status = false;
     }
 }

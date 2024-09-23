@@ -28,7 +28,7 @@ public class OrderDetailService {
     }
 
     public List<OrderDetailSelectDto> getOrderDetails(Orders orders) {
-        List<OrderDetail> orderDetails = orderDetailRepository.findAllByOrdersId(orders.getId());
+        List<OrderDetail> orderDetails = orders.getOrderDetails();
         return orderDetails.stream().map(OrderDetailSelectDto::new).toList();
     }
 }

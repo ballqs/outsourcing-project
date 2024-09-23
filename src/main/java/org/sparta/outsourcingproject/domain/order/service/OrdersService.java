@@ -3,6 +3,7 @@ package org.sparta.outsourcingproject.domain.order.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.common.annotation.OrderLog;
+import org.sparta.outsourcingproject.common.code.ErrorCode;
 import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.cart.service.CartDetailService;
 import org.sparta.outsourcingproject.domain.order.dto.OrderDetailSelectDto;
@@ -10,6 +11,8 @@ import org.sparta.outsourcingproject.domain.order.dto.OrdersResponseSelectDto;
 import org.sparta.outsourcingproject.domain.order.dto.OrdersSelectDto;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.order.entity.OrdersProcessEnum;
+import org.sparta.outsourcingproject.domain.order.exception.ForbiddenOrderStatusChangeException;
+import org.sparta.outsourcingproject.domain.order.exception.ImmutableOrderStatusException;
 import org.sparta.outsourcingproject.domain.order.repository.OrdersRepository;
 import org.sparta.outsourcingproject.domain.user.entity.User;
 import org.sparta.outsourcingproject.domain.user.service.UserService;
@@ -39,8 +42,8 @@ public class OrdersService {
     public void changeStatus(Long userId , Long orderId) {
         // 접근한 유저가 해당 주문을 받은 가게의 담당자와 일치하는지 검증!
         Orders orders = ordersRepository.findByIdOrThrow(orderId);
-        if (userId.equals(orders.getStore().getUser().getId())) {
-            throw new IllegalArgumentException("니 주문 아님");
+        if (!userId.equals(orders.getStore().getUser().getId())) {
+            throw new ForbiddenOrderStatusChangeException(ErrorCode.FORBIDDEN_ORDER_STATUS_CHANGE);
         }
 
         // 주문 다음 상태로 이행 작업
@@ -51,7 +54,7 @@ public class OrdersService {
             case IN_DELIVERY:
                 break;
             default:
-                throw new IllegalArgumentException("이미 배달완료된 건입니다.");
+                throw new ImmutableOrderStatusException(ErrorCode.CONFLICT_DELIVERY_ALREADY_COMPLETED);
         }
         ordersProcessEnum = OrdersProcessEnum.values()[ordersProcessEnum.getSeq()];
 
