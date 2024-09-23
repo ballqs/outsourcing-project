@@ -48,12 +48,14 @@ public class UserController {
         return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , null , "회원 탈퇴하였습니다."));
     }
 
+    //정보수정
     @PatchMapping("/update")
     public ResponseEntity<PostUserResponseDto> updateUser(@Auth AuthUser authUser,@RequestBody PatchUserRequestDto patchUserRequestDto) {
         userService.updateUser(authUser,patchUserRequestDto);
         return ResponseEntity.ok(new PostUserResponseDto(HttpStatus.OK,"수정이 완료 되었습니다."));
     }
 
+    //회원정보조회
     @GetMapping
     public ResponseEntity<GetProfileResponseDto> getProfileUser(@Auth AuthUser authUser){
         GetProfileResponseDto responseDto = userService.getProfile(authUser);
