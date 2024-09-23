@@ -5,10 +5,7 @@ import org.sparta.outsourcingproject.common.code.ErrorCode;
 import org.sparta.outsourcingproject.common.config.JwtUtil;
 import org.sparta.outsourcingproject.common.config.PasswordEncoder;
 import org.sparta.outsourcingproject.common.dto.AuthUser;
-import org.sparta.outsourcingproject.domain.user.dto.DeleteUserRequestDto;
-import org.sparta.outsourcingproject.domain.user.dto.PatchUserRequestDto;
-import org.sparta.outsourcingproject.domain.user.dto.PostUserSignInRequestDto;
-import org.sparta.outsourcingproject.domain.user.dto.PostUserSignUpRequestDto;
+import org.sparta.outsourcingproject.domain.user.dto.*;
 import org.sparta.outsourcingproject.domain.user.exception.*;
 import org.sparta.outsourcingproject.domain.user.entity.User;
 import org.sparta.outsourcingproject.domain.user.repository.UserRepository;
@@ -82,6 +79,13 @@ public class UserService {
 
         String encodePw = encode.encode(requestDto.getNewPw());
         user.update(encodePw,requestDto);
+    }
+
+    //회원조회
+    public GetProfileResponseDto getProfile(AuthUser authUser) {
+        Long id = authUser.getUserId();
+        User user = findUser(id);
+        return new GetProfileResponseDto(user);
     }
 
     public User findUser(Long userId) {

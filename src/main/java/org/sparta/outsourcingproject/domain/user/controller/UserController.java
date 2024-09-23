@@ -48,4 +48,10 @@ public class UserController {
         userService.updateUser(authUser,patchUserRequestDto);
         return ResponseEntity.ok(new PostUserResponseDto(HttpStatus.OK,"수정이 완료 되었습니다."));
     }
+
+    @GetMapping
+    public ResponseEntity<GetProfileResponseDto> getProfileUser(@Auth AuthUser authUser){
+        GetProfileResponseDto responseDto = userService.getProfile(authUser);
+        return ResponseEntity.ok(responseDto);
+    }
 }
