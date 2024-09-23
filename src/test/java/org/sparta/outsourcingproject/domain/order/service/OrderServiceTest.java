@@ -12,6 +12,7 @@ import org.sparta.outsourcingproject.domain.order.dto.OrdersResponseSelectDto;
 import org.sparta.outsourcingproject.domain.order.entity.OrderDetail;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.order.repository.OrdersRepository;
+import org.sparta.outsourcingproject.domain.store.dto.request.StoreCreateRequestDto;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.enums.StoreOperationStatus;
 import org.sparta.outsourcingproject.domain.user.entity.User;
@@ -51,18 +52,8 @@ public class OrderServiceTest {
         User user = new User();
         ReflectionTestUtils.setField(user , "id" , userId);
 
-        Store store = Store.createStore(
-          "이름" ,
-        "카테고리" ,
-            "010-1234-1234" ,
-                openTime,
-                closeTime,
-        15000 ,
-        "주소" ,
-               BigDecimal.valueOf(5.0),
-               user,
-               StoreOperationStatus.OPERATE
-        );
+        StoreCreateRequestDto requestDto = new StoreCreateRequestDto("이름" , "카테고리" , "010-1234-1234" , openTime , closeTime , 15000 , "주소" , StoreOperationStatus.OPERATE , BigDecimal.valueOf(0));
+        Store store = Store.createStore(requestDto , user);
 
         Long cartId = 1L;
         Cart cart = new Cart(user , store , 0);
@@ -94,18 +85,8 @@ public class OrderServiceTest {
         LocalTime openTime = LocalTime.now();
         LocalTime closeTime = LocalTime.now().plusMinutes(8);
 
-        Store store = Store.createStore(
-                "이름" ,
-                "카테고리" ,
-                "010-1234-1234" ,
-                openTime,
-                closeTime,
-                15000 ,
-                "주소" ,
-                BigDecimal.valueOf(5.0),
-                user,
-                StoreOperationStatus.OPERATE
-        );
+        StoreCreateRequestDto requestDto = new StoreCreateRequestDto("이름" , "카테고리" , "010-1234-1234" , openTime , closeTime , 15000 , "주소" , StoreOperationStatus.OPERATE , BigDecimal.valueOf(0));
+        Store store = Store.createStore(requestDto , user);
 
         Cart cart = new Cart(user , store , 15000);
         ReflectionTestUtils.setField(cart , "id" , cartId);
@@ -137,18 +118,8 @@ public class OrderServiceTest {
         LocalTime openTime = LocalTime.now();
         LocalTime closeTime = LocalTime.now().plusMinutes(8);
 
-        Store store = Store.createStore(
-                "이름" ,
-                "카테고리" ,
-                "010-1234-1234" ,
-                openTime,
-                closeTime,
-                15000 ,
-                "주소" ,
-                BigDecimal.valueOf(5.0),
-                user,
-                StoreOperationStatus.OPERATE
-        );
+        StoreCreateRequestDto requestDto = new StoreCreateRequestDto("이름" , "카테고리" , "010-1234-1234" , openTime , closeTime , 15000 , "주소" , StoreOperationStatus.OPERATE , BigDecimal.valueOf(0));
+        Store store = Store.createStore(requestDto , user);
 
         Cart cart = new Cart(user , store , 15000);
         ReflectionTestUtils.setField(cart , "id" , cartId);
