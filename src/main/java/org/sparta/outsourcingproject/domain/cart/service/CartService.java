@@ -80,7 +80,6 @@ public class CartService {
 
         // 2.cartDetail 테이블 update
         cartDetail.update(menu , menu.getName() , menu.getPrice() , cnt);
-        cartDetailService.saveCartDetail(cartDetail);
 //        eventPublisher.publishEvent(new CartDetailEvent(cartDetail));
     }
 
@@ -92,13 +91,16 @@ public class CartService {
             throw new CartUnauthorizedException(ErrorCode.FORBIDDEN_CART_DELETION);
         }
 
+        int amt = cartDetail.getCnt() * cartDetail.getMenuPrice();
+
         cartDetailService.deleteCartDetail(cartDetailId);
         List<CartDetail> cartDetails = cartDetailService.getAllCartDetails(cartDetail.getCart().getId());
         if (cartDetails.size() == 0) {
             cartRepository.deleteById(cartDetail.getCart().getId());
+        } else {
+            Cart cart = cartDetails.get(0).getCart();
+            cart.updateTotalAmt(cart.getTotalAmt() - amt);
         }
-
-        // 삭제시 금액 수정
     }
 
     @Transactional

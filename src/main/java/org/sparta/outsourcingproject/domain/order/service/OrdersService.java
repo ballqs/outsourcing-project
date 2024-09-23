@@ -63,7 +63,6 @@ public class OrdersService {
             default:
                 throw new ImmutableOrderStatusException(ErrorCode.ORDER_CANCELLED);
         }
-        ordersRepository.save(orders);
     }
 
     public OrdersResponseSelectDto getOrder(Long orderId) {
@@ -91,7 +90,6 @@ public class OrdersService {
             throw new ForbiddenOrderStatusChangeException(ErrorCode.FORBIDDEN_NO_PERMISSION);
         }
         orders.updateOrdersProcess(OrdersProcessEnum.CANCEL);
-        ordersRepository.save(orders);
     }
 
     public boolean deliveredCheck(Long orderId) {
