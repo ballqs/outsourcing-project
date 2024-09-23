@@ -26,9 +26,10 @@ public class CartDetailService {
         return cartDetailRepository.getSumAmt(cartId);
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void saveCartDetail(CartDetailEvent event) {
-        cartDetailRepository.save(event.getCartDetail());
+//    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    public void saveCartDetail(CartDetail cartDetail) {
+        cartDetailRepository.save(cartDetail);
+//        cartDetailRepository.save(event.getCartDetail());
     }
 
     public void deleteCartDetail(Long cartDetailId) {

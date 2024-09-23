@@ -19,23 +19,22 @@ import java.util.List;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseEntity<ErrorResponse> BadRequestHandle(BadRequestException e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.value() , e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getStatus() , e.getMessage()));
     }
 
-    //이메일 중복
     @ExceptionHandler(value = ConflictException.class)
     public ResponseEntity<ErrorResponse> ConflictHandle(ConflictException e){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(HttpStatus.CONFLICT.value() , e.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getStatus() , e.getMessage()));
     }
 
     @ExceptionHandler(value = ForbiddenException.class)
     public ResponseEntity<ErrorResponse> ForbiddenHandle(ForbiddenException e){
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(HttpStatus.FORBIDDEN.value() , e.getMessage()));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getStatus() , e.getMessage()));
     }
 
     @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<ErrorResponse> NotFoundHandle(NotFoundException e){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(HttpStatus.NOT_FOUND.value() , e.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getStatus() , e.getMessage()));
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)

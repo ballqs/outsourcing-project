@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
 import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.menu.entity.Menu;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
+import org.sparta.outsourcingproject.domain.store.dto.request.StoreCreateRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreUpdateRequestDto;
 import org.sparta.outsourcingproject.domain.store.enums.StoreOperationStatus;
 import org.sparta.outsourcingproject.domain.store.enums.StoreStatus;
@@ -23,7 +25,8 @@ import java.util.List;
 @Entity
 @Table(name = "store")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Slf4j
+@NoArgsConstructor
 public class Store extends Timestamped {
 
     @Id
@@ -72,32 +75,21 @@ public class Store extends Timestamped {
     private List<Menu> menus = new ArrayList<>();
 
 
-
     // 객체 생성 위한 정적 팩토리 메서드
-    public static Store createStore(
-            String name,
-            String category,
-            String tel,
-            LocalTime openTime,
-            LocalTime closeTime,
-            Integer minPrice,
-            String address,
-            BigDecimal rating,
-            User user,
-            StoreOperationStatus operationStatus
-            )
+    public static Store createStore(StoreCreateRequestDto requestDto, User user)
     {
         Store createdStore = new Store();
-        createdStore.name = name;
-        createdStore.category = category;
-        createdStore.tel = tel;
-        createdStore.openTime = openTime;
-        createdStore.closeTime = closeTime;
-        createdStore.minPrice = minPrice;
-        createdStore.address = address;
-        createdStore.operationStatus = operationStatus;
-        createdStore.rating = rating;
+        createdStore.name = requestDto.getName();
+        createdStore.category = requestDto.getCategory();
+        createdStore.tel = requestDto.getTel();
+        createdStore.openTime = requestDto.getOpenTime();
+        createdStore.closeTime = requestDto.getCloseTime();
+        createdStore.minPrice = requestDto.getMinPrice();
+        createdStore.address = requestDto.getAddress();
+        createdStore.operationStatus = requestDto.getStoreOperationStatus();
+        createdStore.rating = requestDto.getRating();
         createdStore.user = user;
+        createdStore.operationStatus = requestDto.getStoreOperationStatus();
 
         return createdStore;
     }
@@ -130,7 +122,14 @@ public class Store extends Timestamped {
     // 현재 시간이 openTime과 closeTime 사이인지 확인
     public boolean isCurrentlyOpened() {
         LocalTime now = LocalTime.now();
-        return !now.isBefore(openTime) && now.isBefore(closeTime);
+
+        // 마감 시간이 새벽인 경우(closeTime < openTime)
+        if (this.closeTime.isBefore(this.openTime)) {
+            return now.isAfter(this.openTime) || now.isBefore(this.closeTime);
+        }
+
+        // 마감 시간이 새벽이 아닌 경우(closeTime > openTime)
+        return now.isAfter(this.openTime) && now.isBefore(this.closeTime);
     }
 
     // 가게의 현재 상태(open /close)를 업데이트
@@ -173,13 +172,13 @@ public class Store extends Timestamped {
 
     // 가게 정보 수정
     public void updateStoreInfo(StoreUpdateRequestDto requestDto) {
-        this.name = requestDto.getName();
-        this.category = requestDto.getCategory();
-        this.tel = requestDto.getTel();
-        this.openTime = requestDto.getOpenTime();
-        this.closeTime = requestDto.getCloseTime();
-        this.minPrice = requestDto.getMinPrice();
-        this.address = requestDto.getAddress();
+        this.name = requestDto.getName() != null ? requestDto.getName() : this.name;
+        this.category = requestDto.getCategory() != null ? requestDto.getCategory() : this.category;
+        this.tel = requestDto.getTel() != null ? requestDto.getTel() : this.tel;
+        this.openTime = requestDto.getOpenTime() != null ? requestDto.getOpenTime() : this.openTime;
+        this.closeTime = requestDto.getCloseTime() != null ? requestDto.getCloseTime() : this.closeTime;
+        this.minPrice = requestDto.getMinPrice() != null ? requestDto.getMinPrice() : this.minPrice;
+        this.address = requestDto.getAddress() != null ? requestDto.getAddress() : this.address;  // 기존 값 유지
     }
 
 

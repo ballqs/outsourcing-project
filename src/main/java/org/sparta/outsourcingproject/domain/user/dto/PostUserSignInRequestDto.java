@@ -7,4 +7,5 @@ import org.sparta.outsourcingproject.domain.user.Authority;
 public class PostUserSignInRequestDto {
     private String email;
     private String pw;
+    private Authority authority;
 }

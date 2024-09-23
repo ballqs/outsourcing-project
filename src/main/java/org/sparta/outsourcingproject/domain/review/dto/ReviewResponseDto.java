@@ -6,18 +6,18 @@ import org.sparta.outsourcingproject.domain.review.entity.Review;
 @Getter
 public class ReviewResponseDto {
     private Long id;
-    private String username;
     private String contents;
+    private int star;
 
     public ReviewResponseDto(Review review) {
         this.id = review.getId();
-//        this.username = review.getUsername();
-//        this.contents = review.getContents();
+        this.contents = review.getContents();
+        this.star = review.getStar();
     }
 
-    public ReviewResponseDto(Long id, String username, String contents) {
+    public ReviewResponseDto(Long id, String contents, int star) {
         this.id = id;
-        this.username = username;
         this.contents = contents;
+        this.star = star;
     }
 }

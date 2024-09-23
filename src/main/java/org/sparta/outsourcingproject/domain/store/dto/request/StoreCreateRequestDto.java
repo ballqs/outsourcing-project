@@ -23,8 +23,8 @@ public class StoreCreateRequestDto {
     @NotBlank
     private Integer minPrice;
     private String address;
-    private StoreOperationStatus storeOperationStatus = StoreOperationStatus.OPERATE;
-    private BigDecimal rating = BigDecimal.valueOf(0);
+    private StoreOperationStatus storeOperationStatus = StoreOperationStatus.OPERATE; // 처음 가게 등록하면 당연히 폐업 아니고 정상 영업 상태
+    private BigDecimal rating = BigDecimal.valueOf(0); // 가게 초기 평점 0.0점
 
 
 

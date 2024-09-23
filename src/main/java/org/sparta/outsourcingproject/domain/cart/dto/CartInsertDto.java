@@ -6,8 +6,5 @@ import lombok.Getter;
 @Getter
 public class CartInsertDto {
     @NotNull
-    private Long userId;
-
-    @NotNull
     private Long storeId;
 }

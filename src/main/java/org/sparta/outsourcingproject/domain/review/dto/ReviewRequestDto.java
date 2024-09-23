@@ -6,4 +6,5 @@ import lombok.Getter;
 public class ReviewRequestDto {
     private String username;
     private String contents;
+
 }

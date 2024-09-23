@@ -2,6 +2,7 @@ package org.sparta.outsourcingproject.domain.store.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.enums.StoreStatus;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class StoreGetResponseDto {
 
     private String name;
