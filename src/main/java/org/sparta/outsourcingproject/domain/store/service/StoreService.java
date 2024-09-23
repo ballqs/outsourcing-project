@@ -11,14 +11,13 @@ import org.sparta.outsourcingproject.domain.store.dto.response.StoreResponseDto;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.enums.StoreOperationStatus;
 import org.sparta.outsourcingproject.domain.store.repository.StoreRepository;
+import org.sparta.outsourcingproject.domain.user.Authority;
 import org.sparta.outsourcingproject.domain.user.entity.User;
-import org.sparta.outsourcingproject.domain.user.enums.UserRole;
 import org.sparta.outsourcingproject.domain.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +44,7 @@ public class StoreService {
 
         User user = userService.findUser(userId);
 
-        if (user.getAuthority() == UserRole.USER) {
+        if (user.getAuthority() == Authority.USER) {
             throw new IllegalArgumentException("사장 등급의 유저만 가게를 등록할 수 있습니다.");
         }
 

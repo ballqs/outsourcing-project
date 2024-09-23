@@ -17,17 +17,11 @@ import java.util.stream.Collectors;
 
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 @Service
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-
-
-    public ReviewService(ReviewRepository reviewRepository)  {
-        this.reviewRepository = reviewRepository;
-    }
 
 //    public ReviewResponseDto saveReview(ReviewRequestDto reviewRequestDto) {
 //        // 주문이 배달 완료 상태인지 확인
@@ -40,7 +34,6 @@ public class ReviewService {
 //        return null;
 //    }
 
-
     public List<Review> getReviews(Long storeId, int minRating, int maxRating) {
         //리뷰 조회
         List<Review> reviews = reviewRepository.findByStoreIdAndStarBetweenOrderByCreatedAtDesc(storeId, minRating, maxRating);
@@ -52,6 +45,4 @@ public class ReviewService {
                 .collect(Collectors.toList());
 
     }
-
-
 }
