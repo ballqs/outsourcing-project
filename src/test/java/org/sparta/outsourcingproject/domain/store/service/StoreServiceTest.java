@@ -1,11 +1,11 @@
 package org.sparta.outsourcingproject.domain.store.service;
 
-import org.apache.catalina.mbeans.UserMBean;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.sparta.outsourcingproject.domain.menu.common.FoodType;
 import org.sparta.outsourcingproject.domain.menu.entity.Menu;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreCreateRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreListRequestDto;
@@ -17,9 +17,8 @@ import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.enums.StoreOperationStatus;
 import org.sparta.outsourcingproject.domain.store.enums.StoreStatus;
 import org.sparta.outsourcingproject.domain.store.repository.StoreRepository;
-import org.sparta.outsourcingproject.domain.user.dto.PostUserSaveRequestDto;
+import org.sparta.outsourcingproject.domain.user.Authority;
 import org.sparta.outsourcingproject.domain.user.entity.User;
-import org.sparta.outsourcingproject.domain.user.enums.UserRole;
 import org.sparta.outsourcingproject.domain.user.service.UserService;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -29,9 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -61,7 +58,7 @@ public class StoreServiceTest {
 
         User user = new User();
         ReflectionTestUtils.setField(user, "id", userId);
-        ReflectionTestUtils.setField(user, "authority", UserRole.OWNER);
+        ReflectionTestUtils.setField(user, "authority", Authority.OWNER);
 
         StoreCreateRequestDto requestDto = new StoreCreateRequestDto(
                 "Test",
@@ -121,8 +118,8 @@ public class StoreServiceTest {
         ReflectionTestUtils.setField(store, "id", storeId);
         ReflectionTestUtils.setField(store, "status", StoreStatus.OPENED);
 
-        Menu menu1 = new Menu("포테이토 피자", "양식", 20000);
-        Menu menu2 = new Menu("콤비네이션 피자", "양식", 18000);
+        Menu menu1 = new Menu("포테이토 피자", FoodType.WESTERN, 20000);
+        Menu menu2 = new Menu("콤비네이션 피자", FoodType.WESTERN, 18000);
         List<Menu> menus = List.of(menu1, menu2);
         ReflectionTestUtils.setField(store, "menus", menus);
 
@@ -198,7 +195,7 @@ public class StoreServiceTest {
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result).hasSize(2); // 폐업한 마지막 가게는 제외되는 게 맞음
+        assertThat(result).hasSize(2); // 총 3개지만 폐업한 마지막 가게는 제외되는 게 맞음
         assertThat(result.get(0).getName()).isEqualTo(store1.getName());
         assertThat(result.get(1).getName()).isEqualTo(store2.getName());
     }
@@ -267,8 +264,7 @@ public class StoreServiceTest {
 
         // when
         storeService.setShutdownStore(store.getId());
-        
-        
+
         // then
         assertThat(store.getOperationStatus()).isEqualTo(StoreOperationStatus.SHUTDOWN);
     }
