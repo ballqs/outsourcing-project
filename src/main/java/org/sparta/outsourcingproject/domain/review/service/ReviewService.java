@@ -10,7 +10,9 @@ import org.sparta.outsourcingproject.domain.review.entity.Review;
 import org.sparta.outsourcingproject.domain.review.repository.ReviewRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLOutput;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
@@ -43,6 +46,5 @@ public class ReviewService {
         return reviews.stream()
                 .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
                 .collect(Collectors.toList());
-
     }
 }

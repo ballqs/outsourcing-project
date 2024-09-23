@@ -10,4 +10,9 @@ public class CartDetailUpdateDto {
 
     @NotNull
     private int cnt;
+
+    // 추가
+    @NotNull
+    private Long storeId;
+
 }

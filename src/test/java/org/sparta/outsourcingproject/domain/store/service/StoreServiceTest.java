@@ -60,6 +60,8 @@ public class StoreServiceTest {
         ReflectionTestUtils.setField(user, "id", userId);
         ReflectionTestUtils.setField(user, "authority", Authority.OWNER);
 
+
+
         StoreCreateRequestDto requestDto = new StoreCreateRequestDto(
                 "Test",
                 "pizza",
@@ -118,8 +120,8 @@ public class StoreServiceTest {
         ReflectionTestUtils.setField(store, "id", storeId);
         ReflectionTestUtils.setField(store, "status", StoreStatus.OPENED);
 
-        Menu menu1 = new Menu("포테이토 피자", FoodType.WESTERN, 20000);
-        Menu menu2 = new Menu("콤비네이션 피자", FoodType.WESTERN, 18000);
+        Menu menu1 = new Menu("포테이토 피자", FoodType.WESTERN, 20000, store);
+        Menu menu2 = new Menu("콤비네이션 피자", FoodType.WESTERN, 18000, store);
         List<Menu> menus = List.of(menu1, menu2);
         ReflectionTestUtils.setField(store, "menus", menus);
 

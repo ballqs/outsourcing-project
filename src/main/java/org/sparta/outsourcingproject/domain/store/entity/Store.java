@@ -26,7 +26,7 @@ import java.util.List;
 @Table(name = "store")
 @Getter
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Store extends Timestamped {
 
     @Id
@@ -73,7 +73,6 @@ public class Store extends Timestamped {
 
     @OneToMany(mappedBy = "store")
     private List<Menu> menus = new ArrayList<>();
-
 
 
     // 객체 생성 위한 정적 팩토리 메서드
