@@ -50,15 +50,19 @@ public class OrdersService {
         OrdersProcessEnum ordersProcessEnum = orders.getOrdersProcess();
         switch(ordersProcessEnum) {
             case ORDER:
-            case APPROVED:
-            case IN_DELIVERY:
+                orders.updateOrdersProcess(OrdersProcessEnum.APPROVED);
                 break;
-            default:
+            case APPROVED:
+                orders.updateOrdersProcess(OrdersProcessEnum.IN_DELIVERY);
+                break;
+            case IN_DELIVERY:
+                orders.updateOrdersProcess(OrdersProcessEnum.DELIVERED);
+                break;
+            case DELIVERED:
                 throw new ImmutableOrderStatusException(ErrorCode.CONFLICT_DELIVERY_ALREADY_COMPLETED);
+            default:
+                throw new ImmutableOrderStatusException(ErrorCode.ORDER_CANCELLED);
         }
-        ordersProcessEnum = OrdersProcessEnum.values()[ordersProcessEnum.getSeq()];
-
-        orders.updateOrdersProcess(ordersProcessEnum);
         ordersRepository.save(orders);
     }
 
@@ -79,6 +83,15 @@ public class OrdersService {
             ordersResponseSelectDtos.add(new OrdersResponseSelectDto(ordersDto , orderDetailsDto));
         }
         return ordersResponseSelectDtos;
+    }
+
+    public void cancel(Long userId , Long orderId) {
+        Orders orders = ordersRepository.findByIdOrThrow(orderId);
+        if (!userId.equals(orders.getStore().getUser().getId())) {
+            throw new ForbiddenOrderStatusChangeException(ErrorCode.FORBIDDEN_NO_PERMISSION);
+        }
+        orders.updateOrdersProcess(OrdersProcessEnum.CANCEL);
+        ordersRepository.save(orders);
     }
 
     public boolean deliveredCheck(Long orderId) {

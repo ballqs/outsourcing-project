@@ -36,11 +36,7 @@ public class MenuService {
     @Transactional
     public MenuResponseDto createMenu(Long userId, MenuRequestDto menuRequestDto, Long storeId) {
 
-        // 메뉴 생성은 사장님만 가능.
         Store store = storeService.findStore(storeId);
-        if (!store.getUser().getId().equals(userId) || !store.getUser().getAuthority().equals(Authority.OWNER)) {
-            throw new AuthorityMismatchException(ErrorCode.AUTHORITY_MISMATCH_ERROR);
-        }
 
         // 전달받은 메뉴 이름(unique name)이 이미 존재하는가.
         if (menuRepository.existsByName(menuRequestDto.getName())) {
@@ -57,12 +53,9 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuEditResponseDto updateMenu(Long userId, MenuEditRequestDto menuEditRequestDto, Long menuId) {
+    public MenuEditResponseDto updateMenu(Long userId, MenuEditRequestDto menuEditRequestDto, Long storeId, Long menuId) {
         // 메뉴 수정은 사장님만 가능.
         User user = userService.findUser(userId);
-        if (!user.getAuthority().equals(Authority.OWNER)) {
-            throw new AuthorityMismatchException(ErrorCode.AUTHORITY_MISMATCH_ERROR);
-        }
 
         // 수정할 메뉴 존재 유무 확인.
         if (!menuRepository.existsById(menuId)) {
@@ -70,7 +63,7 @@ public class MenuService {
         }
 
         // 메뉴 내용을 변경 - dirty checking으로 자동 반영.
-        Menu updatedMenu = getMenu(menuId);
+        Menu updatedMenu = getMenu(storeId , menuId);
 
         updatedMenu.update(menuEditRequestDto);
 
@@ -83,7 +76,7 @@ public class MenuService {
         // 본인 가게의 메뉴만 삭제가 가능.
         // Store정보 -> userId가 일치하지 않거나, 사장이 아니라면 권한 X
         Store store = storeService.findStore(storeId);
-        if (!store.getUser().getId().equals(userId) || !store.getUser().getAuthority().equals(Authority.OWNER)) {
+        if (!store.getUser().getId().equals(userId)) {
             throw new AuthorityMismatchException(ErrorCode.AUTHORITY_MISMATCH_ERROR);
         }
 
@@ -124,7 +117,7 @@ public class MenuService {
         return store.getMenus();
     }
 
-    public Menu getMenu(Long menuId) {
-        return menuRepository.findById(menuId).orElseThrow(() -> new MenuNotExistsException(ErrorCode.MENU_NOTEXISTS_ERROR));
+    public Menu getMenu(Long storeId , Long menuId) {
+        return menuRepository.findByIdAndStoreId(menuId , storeId).orElseThrow(() -> new MenuNotExistsException(ErrorCode.MENU_NOTEXISTS_ERROR));
     }
 }
