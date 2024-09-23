@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.sparta.outsourcingproject.common.entity.Timestamped;
 import org.sparta.outsourcingproject.domain.menu.common.FoodType;
 import org.sparta.outsourcingproject.domain.menu.dto.request.MenuEditRequestDto;
+import org.sparta.outsourcingproject.domain.menu.dto.request.MenuRequestDto;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 
 @Entity
@@ -31,15 +32,15 @@ public class Menu extends Timestamped {
     @Column(nullable = false)
     private boolean soldOut;
 
-    @Column(nullable = false)  // 삭제 여부 (soft delete) default = false;
-    private boolean status = false;
+    @Column(nullable = false)  // 삭제 여부 (soft delete) default = true; 상태가 true이다 -> 살아있다.
+    private boolean status = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
     public void delete() {
-        this.status = true;
+        this.status = false;
     }
 
     public void update(MenuEditRequestDto menuEditRequestDto) {
