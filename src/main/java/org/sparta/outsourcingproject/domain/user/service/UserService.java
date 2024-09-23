@@ -63,6 +63,7 @@ public class UserService {
         user.delete();
     }
 
+    //회원 수정
     @Transactional
     public void updateUser(AuthUser authUser, PatchUserRequestDto requestDto){
         Long id = authUser.getUserId();
@@ -71,12 +72,15 @@ public class UserService {
         String pw= requestDto.getPw();
         checkPw(pw, user.getPw());
 
+        if(!encode.passwordVerification(requestDto.getPw())){
+            throw new IllegalArgumentException("올바르지 않은 비밀번호 형식입니다.");
+        }
+
         if(requestDto.getPw().equals(requestDto.getNewPw())){
             throw new SamePasswordException(ErrorCode.SAME_PASSWORD);
         }
         //중복된 핸드폰번호 일 경우 예외
         checkHp(requestDto.getPhoneNumber());
-
         String encodePw = encode.encode(requestDto.getNewPw());
         user.update(encodePw,requestDto);
     }
@@ -90,13 +94,13 @@ public class UserService {
 
     //id를 사용한 유저 찾기
     public User findUser(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFindException(ErrorCode.DUPLICATE_EMAIL_ERROR));
+        return userRepository.findByIdAndStatusTrue(userId)
+                .orElseThrow(() -> new UserNotFindException(ErrorCode.USER_NOT_FIND_ERROR));
     }
 
     //email값에 맞는 동일한 유저 찾기
     public User findByEmailUser(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFindException(ErrorCode.USER_NOT_FIND_ERROR));
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFindException(ErrorCode.DUPLICATE_EMAIL_ERROR));
     }
 
     //pw가 틀렸을때 예외처리

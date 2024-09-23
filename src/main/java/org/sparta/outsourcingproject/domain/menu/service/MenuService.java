@@ -118,6 +118,8 @@ public class MenuService {
     }
 
     public Menu getMenu(Long storeId , Long menuId) {
+        // 유저측에서는 status가 1일때 삭제되지 않은 계정 0일때 삭제된 계정
+        // 해당 메뉴가 품절되었는지? 아님 더이상 판매 안하는 삭제된 메뉴인지?
         return menuRepository.findByIdAndStoreId(menuId , storeId).orElseThrow(() -> new MenuNotExistsException(ErrorCode.MENU_NOTEXISTS_ERROR));
     }
 }
