@@ -36,17 +36,12 @@ public class StoreService {
         List<Store> stores = storeRepository.findByUserId(userId); // 해당 유저의 SHUTDOWN(폐업)인 아닌 모든 가게 목록 가져오기
 
         // 로그 추가: stores 리스트 크기와 내용 출력
-//        log.info("유저ID가 {}인 유저는 현재 가게를 {}개 가지고 있습니다." , userId, stores.size());
-
+        log.info("유저ID가 {}인 유저는 현재 가게를 {}개 가지고 있습니다." , userId, stores.size());
         if (stores.size() >= 3) {
             throw new IllegalArgumentException("한 명당 가게를 3개까지만 운영할 수 있습니다");
         }
 
         User user = userService.findUser(userId);
-
-        if (user.getAuthority() == Authority.USER) {
-            throw new IllegalArgumentException("사장 등급의 유저만 가게를 등록할 수 있습니다.");
-        }
 
         // 등록할 가게 엔티티 생성
         Store newStore = Store.createStore(requestDto, user);
