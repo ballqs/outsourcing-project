@@ -34,11 +34,11 @@ public class MenuService {
     private final StoreService storeService;
 
     @Transactional
-    public MenuResponseDto createMenu(Long userId, MenuRequestDto menuRequestDto) {
+    public MenuResponseDto createMenu(Long userId, MenuRequestDto menuRequestDto, Long storeId) {
 
         // 메뉴 생성은 사장님만 가능.
-        User user = userService.findUser(userId);
-        if (!user.getAuthority().equals(Authority.OWNER)) {
+        Store store = storeService.findStore(storeId);
+        if (!store.getUser().getId().equals(userId) || !store.getUser().getAuthority().equals(Authority.OWNER)) {
             throw new AuthorityMismatchException(ErrorCode.AUTHORITY_MISMATCH_ERROR);
         }
 

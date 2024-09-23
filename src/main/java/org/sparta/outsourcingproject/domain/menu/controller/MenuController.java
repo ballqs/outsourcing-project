@@ -20,9 +20,9 @@ public class MenuController {
 
     private final MenuService menuService;
 
-    @PostMapping("/register")
-    public ResponseEntity<MenuResponseDto> createMenu(@Auth AuthUser authUser, @Valid @RequestBody MenuRequestDto menuRequestDto) {
-        MenuResponseDto menuResponseDto = menuService.createMenu(authUser.getUserId(), menuRequestDto);
+    @PostMapping("/register/stores/{storeId}")
+    public ResponseEntity<MenuResponseDto> createMenu(@Auth AuthUser authUser, @Valid @RequestBody MenuRequestDto menuRequestDto, @PathVariable Long storeId) {
+        MenuResponseDto menuResponseDto = menuService.createMenu(authUser.getUserId(), menuRequestDto, storeId);
         return new ResponseEntity<>(menuResponseDto, HttpStatus.CREATED);
     }
 
