@@ -67,4 +67,8 @@ public class User extends Timestamped {
         this.authority = requestDto.getAuthority();
         this.status = true;
     }
+
+    public void delete() {
+        this.status = false;
+    }
 }

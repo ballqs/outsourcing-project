@@ -18,6 +18,7 @@ public enum ErrorCode {
     FORBIDDEN_CART_MODIFICATION(HttpStatus.FORBIDDEN.value(), "본인의 장바구니가 아닌 것은 수정 불가능합니다."),
     FORBIDDEN_CART_DELETION(HttpStatus.FORBIDDEN.value(), "본인이 아니면 삭제가 불가능합니다."),
     FORBIDDEN_ORDER_STATUS_CHANGE(HttpStatus.FORBIDDEN.value(), "본인의 가게의 주문이 아니면 상태전환이 불가능합니다."),
+    USER_NOT_ACTIVE_ERROR(HttpStatus.FORBIDDEN.value(), "사용자 비활성화 상태입니다."),
 
     // 404
     USER_NOT_FIND_ERROR(HttpStatus.NOT_FOUND.value(), "유저가 없습니다."),
@@ -30,6 +31,7 @@ public enum ErrorCode {
 
     // 500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR.value(),"서버 에러");
+
 
 
     private final int status;
