@@ -12,7 +12,10 @@ import org.sparta.outsourcingproject.domain.store.dto.response.StoreGetResponseD
 import org.sparta.outsourcingproject.domain.store.dto.response.StoreResponseDto;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.enums.StoreOperationStatus;
+import org.sparta.outsourcingproject.domain.store.enums.StoreStatus;
+import org.sparta.outsourcingproject.domain.store.exception.StoreClosedException;
 import org.sparta.outsourcingproject.domain.store.exception.StoreNotFoundException;
+import org.sparta.outsourcingproject.domain.store.exception.StoreShutdownException;
 import org.sparta.outsourcingproject.domain.store.exception.TooManyStoresRegisteredException;
 import org.sparta.outsourcingproject.domain.store.repository.StoreRepository;
 import org.sparta.outsourcingproject.domain.user.Authority;
@@ -40,7 +43,7 @@ public class StoreService {
         List<Store> stores = storeRepository.findByUserId(userId); // 해당 유저의 SHUTDOWN(폐업)인 아닌 모든 가게 목록 가져오기
 
         // 로그 추가: stores 리스트 크기와 내용 출력
-        log.info("유저ID가 {}인 유저는 현재 가게를 {}개 가지고 있습니다." , userId, stores.size());
+        log.info("유저 ID가 {}인 유저는 현재 가게를 {}개 가지고 있습니다." , userId, stores.size());
         if (stores.size() >= 3) {
             throw new TooManyStoresRegisteredException(ErrorCode.TOO_MANY_STORE_REGISTERED);
         }
@@ -63,7 +66,7 @@ public class StoreService {
                 .orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND));
 
         if (store.getOperationStatus() == StoreOperationStatus.SHUTDOWN) {
-            throw new IllegalArgumentException("폐업하여 이제 존재하지 않는 가게입니다");
+            throw new StoreShutdownException(ErrorCode.STORE_ALREAY_SHUTDOWN);
         }
 
 //        store.updateAverageRating(); // 가게 평균 평점 최신화
@@ -106,15 +109,22 @@ public class StoreService {
                 .orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND));
 
         if (store.getOperationStatus() == StoreOperationStatus.SHUTDOWN) {
-            throw new IllegalArgumentException("이미 폐업한 가게입니다.");
+            throw new StoreShutdownException(ErrorCode.STORE_ALREAY_SHUTDOWN);
         }
         store.setStoreShutdown(); // 가게 폐업으로 상태 전환
     }
 
     public Store findStore(Long storeId) {
-        // 현재 가게가 마감인지, 아닌지 확인
-        // 현재 가게가 폐업 상태인지 아닌지 확인
-        return storeRepository.findById(storeId).orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND));
+        Store store = storeRepository.findById(storeId).orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND));
+
+        store.updateOperationStatus(); // 현재 시간으로 가게 마감/영업 상태 업데이트
+
+//         현재 가게가 폐업인지 아닌지 확인
+        if (store.getOperationStatus() == StoreOperationStatus.SHUTDOWN) {
+            throw new StoreShutdownException(ErrorCode.STORE_ALREAY_SHUTDOWN);
+        }
+
+        return store;
     }
 
 }

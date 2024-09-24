@@ -58,7 +58,7 @@ public class Store extends Timestamped {
     @Enumerated(EnumType.STRING)
     private StoreOperationStatus operationStatus; // OPERATION(정상 영업), SHUTDOWN(폐점)
 
-    @Column(precision = 2, scale = 1, nullable = false)  // DECIMAL(3,2)와 매핑
+    @Column(precision = 2, scale = 1, nullable = false)  // 평점 소수점 1자리 수까지 표시
     private BigDecimal rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -145,13 +145,13 @@ public class Store extends Timestamped {
 //    public void updateAverageRating() {
 //        // 리뷰가 없을 경우 0으로 처리
 //        if (reviews.isEmpty()) {
-//            this.rating = BigDecimal.ZERO;  // 평점 0으로 설정
+//            this.rating = BigDecimal.ZERO;
 //            return;
 //        }
 //
 //        // 리뷰 평점 합계
 //        BigDecimal totalRating = reviews.stream()
-//                .map(Review::getRating)  // 각 리뷰의 평점 가져오기
+//                .map(review -> BigDecimal.valueOf(review.getStar()))  // 각 리뷰의 평점을 BigDecimal로 변환
 //                .reduce(BigDecimal.ZERO, BigDecimal::add);  // 평점 합산
 //
 ////         평균 계산 (평점의 합을 리뷰 개수로 나누기)
@@ -180,8 +180,6 @@ public class Store extends Timestamped {
         this.minPrice = requestDto.getMinPrice() != null ? requestDto.getMinPrice() : this.minPrice;
         this.address = requestDto.getAddress() != null ? requestDto.getAddress() : this.address;  // 기존 값 유지
     }
-
-
 }
 
 
