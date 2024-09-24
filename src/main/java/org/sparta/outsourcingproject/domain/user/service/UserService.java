@@ -29,7 +29,7 @@ public class UserService {
         if (overlap) {
             throw new DuplicateEmailException(ErrorCode.DUPLICATE_EMAIL_ERROR);
         }
-//        checkHp(postUserSignUpRequestDto.getPhoneNumber());
+        userCheckService.checkHp(postUserSignUpRequestDto.getPhoneNumber());
         //비밀번호 벨류체크
         if(!encode.passwordVerification(postUserSignUpRequestDto.getPw())){
             throw new IllegalArgumentException("올바르지 않은 비밀번호 형식입니다.");

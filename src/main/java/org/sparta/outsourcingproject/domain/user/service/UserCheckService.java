@@ -52,9 +52,8 @@ public class UserCheckService{
 
     //핸드폰번호 중복일때 사용하는 예외 처리
     public void checkHp(String hp){
-        Optional<User> user = userRepository.findByPhoneNumber(hp);
-        if(user.isPresent() && !hp.equals(user.get().getPhoneNumber())){
-            throw new DuplicatePhoneNumberException(ErrorCode.DUPLICATE_PHONE_NUMBER_ERROR);
+        if(userRepository.existsByPhoneNumber(hp)){
+           throw  new DuplicatePhoneNumberException(ErrorCode.DUPLICATE_PHONE_NUMBER_ERROR);
         }
     }
 
