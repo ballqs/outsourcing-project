@@ -3,13 +3,14 @@ package org.sparta.outsourcingproject.domain.dibs.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.common.code.ErrorCode;
+import org.sparta.outsourcingproject.domain.cart.exception.NotFoundDibs;
 import org.sparta.outsourcingproject.domain.dibs.dto.DibsResponseDto;
 import org.sparta.outsourcingproject.domain.dibs.entity.Dibs;
-import org.sparta.outsourcingproject.domain.dibs.exception.NotFoundDibs;
 import org.sparta.outsourcingproject.domain.dibs.repository.DibsRepository;
 import org.sparta.outsourcingproject.domain.store.dto.response.StoreResponseDto;
 import org.sparta.outsourcingproject.domain.store.exception.StoreNotFoundException;
 import org.sparta.outsourcingproject.domain.store.repository.StoreRepository;
+import org.sparta.outsourcingproject.domain.store.service.StoreService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,18 +24,22 @@ import java.util.stream.Collectors;
 public class DibsService {
 
     private final DibsRepository dibsRepository;
+    private final StoreService storeService;
     private final StoreRepository storeRepository;
 
     // 찜하기(call dibs)
     @Transactional
     public DibsResponseDto callDibs(Long storeId, Long userId) {
+
+        storeService.findStore(storeId); // 찜하려는 가게가 존재하는지, 폐업 상태인지 확인
+
         Dibs dibs = Dibs.CreateDibs(storeId, userId); // 찜 생성
 
         Dibs savedDibs = dibsRepository.save(dibs);
         return DibsResponseDto.of(savedDibs);
     }
 
-    //찜 취소(cancel dibs)
+    //본인 찜 삭제
     @Transactional
     public String deleteDibs(Long storeId, Long userId) {
         dibsRepository.deleteByIdStoreIdAndIdUserId(storeId, userId)

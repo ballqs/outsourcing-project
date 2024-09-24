@@ -1,5 +1,6 @@
 package org.sparta.outsourcingproject.domain.store.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StoreListRequestDto {
 
+    @NotBlank
     private String name;
 
 }

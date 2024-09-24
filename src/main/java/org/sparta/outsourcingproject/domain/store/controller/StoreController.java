@@ -2,6 +2,7 @@ package org.sparta.outsourcingproject.domain.store.controller;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.common.annotation.Permission;
@@ -33,7 +34,7 @@ public class StoreController {
 
     @Permission
     @PostMapping
-    public ResponseEntity<ResponseDto<StoreCreateResponseDto>> createStore(@RequestBody StoreCreateRequestDto requestDto, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ResponseDto<StoreCreateResponseDto>> createStore(@RequestBody @Valid StoreCreateRequestDto requestDto, HttpServletRequest httpServletRequest) {
         Long userId = (Long) httpServletRequest.getAttribute("userId");
         StoreCreateResponseDto res = storeService.createStore(requestDto, userId);
         return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , res , "가게 등록에 성공하였습니다!"));
@@ -52,7 +53,7 @@ public class StoreController {
      * 가게 다건 조회 API(가게 메뉴 포함 X)
      */
     @GetMapping
-    public ResponseEntity<ResponseDto<List<StoreResponseDto>>> getStores(@RequestBody StoreListRequestDto requestDto) {
+    public ResponseEntity<ResponseDto<List<StoreResponseDto>>> getStores(@RequestBody @Valid StoreListRequestDto requestDto) {
         List<StoreResponseDto> res = storeService.getStores(requestDto);
         return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , res , "해당 이름을 포함하는 모든 가게 조회에 성공하였습니다."));
     }

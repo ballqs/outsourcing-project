@@ -23,6 +23,7 @@ public enum ErrorCode {
     FORBIDDEN_ORDER_STATUS_CHANGE(HttpStatus.FORBIDDEN.value(), "본인의 가게의 주문이 아니면 상태전환이 불가능합니다."),
     USER_NOT_ACTIVE_ERROR(HttpStatus.FORBIDDEN.value(), "사용자 비활성화 상태입니다."),
     FORBIDDEN_NO_PERMISSION(HttpStatus.FORBIDDEN.value() , "접근 권한이 없습니다."),
+    FORBIDDEN_CLOSED_STORE(HttpStatus.FORBIDDEN.value(), "운영 시간이 아닌 가게는 이용할 수 없습니다."),
 
     // 404
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 ID를 가진 가게를 찾을 수 없습니다"),
