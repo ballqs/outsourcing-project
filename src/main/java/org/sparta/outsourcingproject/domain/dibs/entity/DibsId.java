@@ -19,3 +19,4 @@ public class DibsId implements Serializable {
     private Long storeId;
 
 }
+
