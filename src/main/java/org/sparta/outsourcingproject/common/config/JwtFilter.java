@@ -35,7 +35,7 @@ public class JwtFilter implements Filter {
         String url = httpRequest.getRequestURI();
 
         // 해당 컨트롤러는 토큰 검사를 안한다.
-        if(url.equals("/api/users/signin") || url.startsWith("/api/users/signup")) {
+        if(url.equals("/api/users/signin") || url.startsWith("/api/users/signup") || url.equals("/api/users/recovery")) {
             chain.doFilter(request, response);
             return;
         }
