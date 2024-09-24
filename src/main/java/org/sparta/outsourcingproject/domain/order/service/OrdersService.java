@@ -17,6 +17,7 @@ import org.sparta.outsourcingproject.domain.order.repository.OrdersRepository;
 import org.sparta.outsourcingproject.domain.user.entity.User;
 import org.sparta.outsourcingproject.domain.user.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class OrdersService {
     private final CartDetailService cartDetailService;
     private final UserService userService;
 
+    @Transactional
     public void orderComplete(Cart cart) {
         User user = userService.findUser(cart.getUser().getId());
         Orders orders = Orders.CreateOrders(user , cart);
@@ -39,6 +41,7 @@ public class OrdersService {
     }
 
     @OrderLog
+    @Transactional
     public void changeStatus(Long userId , Long orderId) {
         // 접근한 유저가 해당 주문을 받은 가게의 담당자와 일치하는지 검증!
         Orders orders = ordersRepository.findByIdOrThrow(orderId);
@@ -84,6 +87,7 @@ public class OrdersService {
         return ordersResponseSelectDtos;
     }
 
+    @Transactional
     public void cancel(Long userId , Long orderId) {
         Orders orders = ordersRepository.findByIdOrThrow(orderId);
         if (!userId.equals(orders.getStore().getUser().getId())) {
