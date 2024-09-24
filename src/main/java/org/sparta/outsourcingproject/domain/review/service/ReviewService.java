@@ -1,21 +1,20 @@
 package org.sparta.outsourcingproject.domain.review.service;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.order.service.OrdersService;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewRequestDto;
-import lombok.RequiredArgsConstructor;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewResponseDto;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
 import org.sparta.outsourcingproject.domain.review.repository.ReviewRepository;
-import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -29,7 +28,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final OrdersService ordersService;
 
-    public Review saveReview(ReviewRequestDto reviewRequestDto) {
+    public void saveReview(ReviewRequestDto reviewRequestDto) {
         // ReviewRequestDto에서 주문 ID를 가져옴
         Long orderId = reviewRequestDto.getOrderId();
 
@@ -38,10 +37,12 @@ public class ReviewService {
             throw new IllegalArgumentException("배달 완료된 주문만 리뷰 작성이 가능합니다.");
         }
 
+        Optional<Review> reviewCheck = reviewRepository.findByOrdersId(orderId);
+        if (reviewCheck.isPresent()) {
+            throw new IllegalArgumentException("이미 리뷰가 작성된 주문입니다.");
+        }
 
-        // 별점 검사
-        reviewRequestDto.validateRating();
-
+        Orders orders = ordersService.findOrders(orderId);
 
         // 리뷰 엔티티로 변환
         Review review = new Review(
@@ -52,23 +53,17 @@ public class ReviewService {
         );
 
         // 리뷰 저장
-        return reviewRepository.save(review);
+        reviewRepository.save(review);
     }
 
-        Orders orders = ordersService.findOrders(orderId);
-
-    public List<Review> getReviews(Long storeId, int minRating, int maxRating) {
+    public List<ReviewResponseDto> getReviews(Long storeId, int minRating, int maxRating) {
         //리뷰 조회
         List<Review> reviews = reviewRepository.findByStoreIdAndStarBetweenOrderByCreatedAtDesc(storeId, minRating, maxRating);
         log.info("reviews : {}", reviews);
 
         //최신순
         return reviews.stream()
-                .sorted(Comparator.comparing(Review::getCreatedAt).reversed())
+                .map(ReviewResponseDto::new)
                 .collect(Collectors.toList());
-
     }
-
-
-
 }
