@@ -117,31 +117,6 @@ public class Store extends Timestamped {
     }
 
     // 가게 평점 업데이트 메서드
-//    public void updateAverageRating() {
-//        // 리뷰가 없을 경우 0으로 처리
-//        if (reviews.isEmpty()) {
-//            this.rating = BigDecimal.ZERO;
-//            return;
-//        }
-//
-//        // 리뷰 평점 합계
-//        BigDecimal totalRating = reviews.stream()
-//                .map(review -> BigDecimal.valueOf(review.getStar()))  // 각 리뷰의 평점을 BigDecimal로 변환
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);  // 평점 합산
-//
-//        // 평균 계산 (평점의 합을 리뷰 개수로 나누기)
-//        BigDecimal averageRating = totalRating.divide(
-//                BigDecimal.valueOf(reviews.size()),  // 리뷰 개수
-//                1,  // 소수점 1자리로 설정
-//                RoundingMode.HALF_UP  // 반올림
-//        );
-//
-//        // 가게의 평점 업데이트
-//        this.rating = averageRating;
-//    }
-
-
-    // 가게 평점 업데이트 메서드
     public void updateAverageRating() {
         // 리뷰가 없을 경우 0으로 처리
         if (reviews.isEmpty()) {
@@ -164,8 +139,6 @@ public class Store extends Timestamped {
         // 가게의 평점 업데이트
         this.rating = averageRating;
     }
-
-
 
     // 가게 폐업
     public void setStoreShutdown() {
