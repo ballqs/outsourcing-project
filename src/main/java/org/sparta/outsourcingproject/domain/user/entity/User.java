@@ -89,8 +89,12 @@ public class User extends Timestamped {
 
     public void missMatchByIncrementState() {
         this.state++;
-        if (state >= 5 && protect){
-            this.protect = false;
+        if (this.state >= 5 && !this.protect){
+            changeProtect();
         }
+    }
+
+    public void changeProtect(){
+        this.protect = !protect;
     }
 }

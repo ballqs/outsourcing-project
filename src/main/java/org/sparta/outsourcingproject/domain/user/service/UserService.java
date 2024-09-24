@@ -90,7 +90,16 @@ public class UserService {
         user.update(encodePw,requestDto);
     }
 
-
+    //계정 잠금 해제
+    @Transactional
     public void recoveryUser(PostUserRecoveryRequestDto requestDto) {
+        //이메일에 맞는 유저 찾기
+        User user = userCheckService.findByEmailUser(requestDto.getEmail());
+        //유저의 핸드폰번호와 입력 받은 핸드폰번호가 동일한지 체크
+        if (!user.getPhoneNumber().equals(requestDto.getPhoneNumber())) {
+            throw new UnSamePhoneNumberException(ErrorCode.UNSAME_INFORMATION);
+        }
+        //동일하면 protect값 바꿔주기
+        user.changeProtect();
     }
 }
