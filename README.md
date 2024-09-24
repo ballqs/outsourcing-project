@@ -28,17 +28,10 @@
 
 
 ## 🏠 멤버 구성 및 기능 구현
-<table>
-  <tbody>
-    <tr>
-      <td align="center"><a href="https://github.com/TerryEHLee"><img src="" width="92.7%;" alt=""/><br /><sub><b>팀장 : 변영덕</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/podoDJ"><img src="" width="100%;" alt=""/><br /><sub><b>팀원 : 황호진</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/lizzieFEstudy"><img src="" width="100%;" alt=""/><br /><sub><b>팀원 : 김도균</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/hwangdae"><img src="" width="100%;" alt=""/><br /><sub><b>팀원 : 박한진</b></sub></a><br /></td>
-      <td align="center"><a href="https://github.com/hwangdae"><img src="" width="100%;" alt=""/><br /><sub><b>팀원 : 조성래</b></sub></a><br /></td>
-    </tr>
-  </tbody>
-</table>
+
+| 황호진 | 김도균 | 변영덕 | 박한진 | 조성래 |
+|:---:|:---:|:---:|:---:|:---:|
+| [@ballqs](https://github.com/ballqs) | [@gyun97](https://github.com/gyun97) | [@zerodeok](https://github.com/zerodeok) | [@kanzinPark](https://github.com/kanzinPark) | [@Sungrae-kogi](https://github.com/Sungrae-kogi) |
 
 ## 🤝 역할 분담
 * 변영덕 : 회원가입 / 로그인, JWT 인증/인가
