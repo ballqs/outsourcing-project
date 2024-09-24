@@ -8,15 +8,13 @@ import org.sparta.outsourcingproject.domain.review.entity.Review;
 import org.sparta.outsourcingproject.domain.review.service.ReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
-@RestController("/api/store")
+@RequestMapping("/api")
+@RestController
 @RequiredArgsConstructor
 public class ReviewController {
 
@@ -31,7 +29,7 @@ public class ReviewController {
     }
 
 
-    @GetMapping("/reviews")
+    @GetMapping("/review")
     public ResponseEntity<ResponseDto<List<Review>>> getReviews(
         @RequestParam("storeId") Long storeId,
         @RequestParam("min") int minRating,

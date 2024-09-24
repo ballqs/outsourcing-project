@@ -43,7 +43,7 @@ public class ReviewService {
 
         // 리뷰 엔티티로 변환
         Review review = new Review(
-                store,
+                orders.getStore(),
                 orders,
                 reviewRequestDto.getRating(),
                 reviewRequestDto.getComment()
@@ -53,6 +53,7 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
+        Orders orders = ordersService.findOrders(orderId);
 
     public List<Review> getReviews(Long storeId, int minRating, int maxRating) {
         //리뷰 조회
