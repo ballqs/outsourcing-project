@@ -3,7 +3,6 @@ package org.sparta.outsourcingproject.domain.store.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.common.code.ErrorCode;
-import org.sparta.outsourcingproject.common.exception.custom.NotFoundException;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreCreateRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreListRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreUpdateRequestDto;
@@ -18,9 +17,8 @@ import org.sparta.outsourcingproject.domain.store.exception.StoreNotFoundExcepti
 import org.sparta.outsourcingproject.domain.store.exception.StoreShutdownException;
 import org.sparta.outsourcingproject.domain.store.exception.TooManyStoresRegisteredException;
 import org.sparta.outsourcingproject.domain.store.repository.StoreRepository;
-import org.sparta.outsourcingproject.domain.user.Authority;
 import org.sparta.outsourcingproject.domain.user.entity.User;
-import org.sparta.outsourcingproject.domain.user.service.UserService;
+import org.sparta.outsourcingproject.domain.user.service.UserCheckService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +33,7 @@ import java.util.stream.Collectors;
 public class StoreService {
 
     private final StoreRepository storeRepository;
-    private final UserService userService;
+    private final UserCheckService userCheckService;
 
     // 가게 등록 메서드
     public StoreCreateResponseDto createStore(StoreCreateRequestDto requestDto, Long userId) {
@@ -47,7 +45,7 @@ public class StoreService {
             throw new TooManyStoresRegisteredException(ErrorCode.TOO_MANY_STORE_REGISTERED);
         }
 
-        User user = userService.findUser(userId);
+        User user = userCheckService.findUser(userId);
 
         // 등록할 가게 엔티티 생성
         Store newStore = Store.createStore(requestDto, user);

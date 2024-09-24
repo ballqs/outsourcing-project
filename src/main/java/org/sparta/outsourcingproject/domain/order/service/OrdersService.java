@@ -15,7 +15,7 @@ import org.sparta.outsourcingproject.domain.order.exception.ForbiddenOrderStatus
 import org.sparta.outsourcingproject.domain.order.exception.ImmutableOrderStatusException;
 import org.sparta.outsourcingproject.domain.order.repository.OrdersRepository;
 import org.sparta.outsourcingproject.domain.user.entity.User;
-import org.sparta.outsourcingproject.domain.user.service.UserService;
+import org.sparta.outsourcingproject.domain.user.service.UserCheckService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +30,11 @@ public class OrdersService {
     private final OrdersRepository ordersRepository;
     private final OrderDetailService orderDetailService;
     private final CartDetailService cartDetailService;
-    private final UserService userService;
+    private final UserCheckService userCheckService;
 
     @Transactional
     public void orderComplete(Cart cart) {
-        User user = userService.findUser(cart.getUser().getId());
+        User user = userCheckService.findUser(cart.getUser().getId());
         Orders orders = Orders.CreateOrders(user , cart);
         Orders saveOrder = ordersRepository.save(orders);
         orderDetailService.orderComplete(saveOrder , cartDetailService.getAllCartDetails(cart.getId()));

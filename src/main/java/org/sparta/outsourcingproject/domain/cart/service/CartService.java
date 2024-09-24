@@ -16,11 +16,10 @@ import org.sparta.outsourcingproject.domain.order.service.OrdersService;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.service.StoreService;
 import org.sparta.outsourcingproject.domain.user.entity.User;
-import org.sparta.outsourcingproject.domain.user.service.UserService;
+import org.sparta.outsourcingproject.domain.user.service.UserCheckService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +32,7 @@ public class CartService {
     private final CartDetailService cartDetailService;
     private final OrdersService ordersService;
 //    private final ApplicationEventPublisher eventPublisher;
-    private final UserService userService;
+    private final UserCheckService userCheckService;
     private final StoreService storeService;
     private final MenuService menuService;
 
@@ -45,7 +44,7 @@ public class CartService {
         Long menuId = cartDetailInsertDto.getMenuId();
         int cnt = cartDetailInsertDto.getCnt();
 
-        User user = userService.findUser(userId);
+        User user = userCheckService.findUser(userId);
         Store store = storeService.findStore(cartInsertDto.getStoreId());
         Menu menu = menuService.getMenu(store.getId() , menuId);
 
