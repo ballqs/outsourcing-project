@@ -21,6 +21,5 @@ public class MenuEditRequestDto {
     @Positive(message = "메뉴 가격은 양수값이어야 합니다.")
     private int price;
 
-    @NotEmpty(message = "품절 여부")
     private boolean soldOut;
 }

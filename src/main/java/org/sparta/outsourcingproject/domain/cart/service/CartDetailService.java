@@ -6,6 +6,7 @@ import org.sparta.outsourcingproject.domain.cart.entity.CartDetail;
 import org.sparta.outsourcingproject.domain.cart.java.CartDetailEvent;
 import org.sparta.outsourcingproject.domain.cart.repository.CartDetailRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -26,11 +27,14 @@ public class CartDetailService {
         return cartDetailRepository.getSumAmt(cartId);
     }
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void saveCartDetail(CartDetailEvent event) {
-        cartDetailRepository.save(event.getCartDetail());
+//    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    @Transactional
+    public void saveCartDetail(CartDetail cartDetail) {
+        cartDetailRepository.save(cartDetail);
+//        cartDetailRepository.save(event.getCartDetail());
     }
 
+    @Transactional
     public void deleteCartDetail(Long cartDetailId) {
         cartDetailRepository.deleteById(cartDetailId);
     }

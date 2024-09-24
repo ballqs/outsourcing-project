@@ -1,5 +1,6 @@
 package org.sparta.outsourcingproject.domain.user.entity;
 
+import ch.qos.logback.classic.encoder.JsonEncoder;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import org.sparta.outsourcingproject.domain.cart.entity.Cart;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.user.Authority;
+import org.sparta.outsourcingproject.domain.user.dto.PatchUserRequestDto;
 import org.sparta.outsourcingproject.domain.user.dto.PostUserSignUpRequestDto;
 
 import java.util.ArrayList;
@@ -70,5 +72,15 @@ public class User extends Timestamped {
 
     public void delete() {
         this.status = false;
+    }
+
+    public void update(String pw, PatchUserRequestDto requestDto) {
+
+        this.name = String.valueOf(requestDto.getAuthority() != null ? requestDto.getAuthority() : this.authority);
+        this.phoneNumber = requestDto.getPhoneNumber() != null ? requestDto.getPhoneNumber() : this.phoneNumber;
+        this.addressDetail = requestDto.getAddressDetail() != null ? requestDto.getAddressDetail() : this.addressDetail;
+        this.zip = requestDto.getZip() != null ? requestDto.getZip() : this.zip;
+        this.address = requestDto.getAddress() != null ? requestDto.getAddress() : this.address;
+        this.pw = requestDto.getPw() != null ? pw : this.pw;
     }
 }

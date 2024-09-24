@@ -1,7 +1,6 @@
 package org.sparta.outsourcingproject.domain.review.service;
 
 
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.order.service.OrdersService;
@@ -10,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewResponseDto;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
 import org.sparta.outsourcingproject.domain.review.repository.ReviewRepository;
+import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -37,13 +38,15 @@ public class ReviewService {
             throw new IllegalArgumentException("배달 완료된 주문만 리뷰 작성이 가능합니다.");
         }
 
+
         // 별점 검사
         reviewRequestDto.validateRating();
 
+
         // 리뷰 엔티티로 변환
         Review review = new Review(
-                reviewRequestDto.getStoreId(),
-                reviewRequestDto.getOrderId(),
+                store,
+                orders,
                 reviewRequestDto.getRating(),
                 reviewRequestDto.getComment()
         );

@@ -2,13 +2,11 @@ package org.sparta.outsourcingproject.domain.review.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.http.ResponseEntity;
 
 @Getter
 @Setter
 public class ReviewRequestDto {
 
-    private Long storeId;   // 가게 ID
     private Long orderId;   // 주문 ID >> long
     private int rating;     // 별점 (1~5점)
     private String comment; // 리뷰 내용
