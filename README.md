@@ -81,5 +81,21 @@ https://www.figma.com/file/onGfiOKoB3fKJr75vYb4tL?type=design%27&node-id=0:1&mod
 ![api5](https://github.com/user-attachments/assets/11722a4c-1971-462e-a45b-bb7f898b8fb6)
 ![api6](https://github.com/user-attachments/assets/fa5c22e5-856b-4aae-a806-9d33b3cba3dd)
 
+## 📑 프로젝트 후기
+
+### 황호진
+기간이 짧은 만큼 많은 생각을 하게 된 프로젝트였고 기능을 많이 추가 못한 아쉬움이 남습니다.
+
+### 김도균
+아직 많이 미흡하지만 테스트 코드 작성에 대해 연습해볼 수 있어 좋았습니다.
+
+### 조성래
+CRUD 에 대해서 더욱 다져볼 수 있었지만, 더 도전할 수 있었지 않았나 생각합니다.
+
+### 박한진
+아직은 어렵지만 이번 프로젝트를 통해서 스프링에 대한 이해를 높였습니다.
+
+### 변영덕
+이전 프로젝트에서 미흡했던 JWT를 이번에 좀 더 공부하며 이해를 할 수 있었습니다.
 
 
