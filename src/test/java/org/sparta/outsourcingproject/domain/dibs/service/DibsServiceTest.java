@@ -76,7 +76,6 @@ class DibsServiceTest {
         // when
         String result = dibsService.deleteDibs(storeId, userId);
 
-
         // then
         assertThat(result).isEqualTo("해당 가게를 찜 목록에서 삭제하였습니다.");
         verify(dibsRepository, times(1)).deleteByIdStoreIdAndIdUserId(storeId, userId);

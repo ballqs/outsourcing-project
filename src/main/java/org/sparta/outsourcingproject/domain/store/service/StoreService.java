@@ -3,7 +3,6 @@ package org.sparta.outsourcingproject.domain.store.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.common.code.ErrorCode;
-import org.sparta.outsourcingproject.common.exception.custom.NotFoundException;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreCreateRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreListRequestDto;
 import org.sparta.outsourcingproject.domain.store.dto.request.StoreUpdateRequestDto;
@@ -18,9 +17,8 @@ import org.sparta.outsourcingproject.domain.store.exception.StoreNotFoundExcepti
 import org.sparta.outsourcingproject.domain.store.exception.StoreShutdownException;
 import org.sparta.outsourcingproject.domain.store.exception.TooManyStoresRegisteredException;
 import org.sparta.outsourcingproject.domain.store.repository.StoreRepository;
-import org.sparta.outsourcingproject.domain.user.Authority;
 import org.sparta.outsourcingproject.domain.user.entity.User;
-import org.sparta.outsourcingproject.domain.user.service.UserService;
+import org.sparta.outsourcingproject.domain.user.service.UserCheckService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,16 +27,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @Slf4j
 @RequiredArgsConstructor
 public class StoreService {
 
     private final StoreRepository storeRepository;
-    private final UserService userService;
+    private final UserCheckService userCheckService;
 
     // 가게 등록 메서드
-    @Transactional
     public StoreCreateResponseDto createStore(StoreCreateRequestDto requestDto, Long userId) {
         List<Store> stores = storeRepository.findByUserId(userId); // 해당 유저의 SHUTDOWN(폐업)인 아닌 모든 가게 목록 가져오기
 
@@ -48,7 +45,7 @@ public class StoreService {
             throw new TooManyStoresRegisteredException(ErrorCode.TOO_MANY_STORE_REGISTERED);
         }
 
-        User user = userService.findUser(userId);
+        User user = userCheckService.findUser(userId);
 
         // 등록할 가게 엔티티 생성
         Store newStore = Store.createStore(requestDto, user);
@@ -69,8 +66,9 @@ public class StoreService {
             throw new StoreShutdownException(ErrorCode.STORE_ALREAY_SHUTDOWN);
         }
 
-//        store.updateAverageRating(); // 가게 평균 평점 최신화
+        store.updateAverageRating(); // 가게 평균 평점 최신화
         store.updateOperationStatus();  // 현재 시간으로 상태(개점/마감) 업데이트
+
         return StoreGetResponseDto.of(store);
     }
 
@@ -80,11 +78,12 @@ public class StoreService {
         List<Store> findStoreList = new ArrayList<>();
 
         storeRepository.findAll().stream()
-                .filter(store -> store.getName().contains(requestDto.getName())&& store.getOperationStatus() != StoreOperationStatus.SHUTDOWN) // 가게 이름에 입력받은 이름 포함하고 있고 폐업 X
+                .filter(store -> store.getName().contains(requestDto.getName()) && store.getOperationStatus() != StoreOperationStatus.SHUTDOWN) // 가게 이름에 입력받은 이름 포함하고 있고 폐업 X
                 .forEach(store -> {
                     store.updateOperationStatus(); // 현재 시각으로 가게의 개점/마감 상태 업데이트
-//                    store.updateAverageRating(); // 평점 업데이트
+                    store.updateAverageRating(); // 평점 업데이트
                     findStoreList.add(store); // 리스트에 추가
+
                 });
 
         return findStoreList.stream()
@@ -93,7 +92,6 @@ public class StoreService {
     }
 
     // 가게 정보 수정 메서드
-    @Transactional
     public StoreGetResponseDto updateStoreInfo(StoreUpdateRequestDto requestDto, Long id) {
         Store store = storeRepository.findById(id)
                 .orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND));
@@ -103,7 +101,6 @@ public class StoreService {
     }
 
     // 가게 폐업으로 전환 메서드
-    @Transactional
     public void setShutdownStore(Long id) {
         Store store = storeRepository.findById(id)
                 .orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND));
