@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewResponseDto;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
 import org.sparta.outsourcingproject.domain.review.repository.ReviewRepository;
+import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,10 +38,13 @@ public class ReviewService {
             throw new IllegalArgumentException("배달 완료된 주문만 리뷰 작성이 가능합니다.");
         }
 
+        Orders orders = ordersService.findOrders(orderId);
+        Store store = orders.getStore();
+
         // 리뷰 엔티티로 변환
         Review review = new Review(
-                reviewRequestDto.getStoreId(),
-                reviewRequestDto.getOrderId(),
+                store,
+                orders,
                 reviewRequestDto.getRating(),
                 reviewRequestDto.getComment()
         );

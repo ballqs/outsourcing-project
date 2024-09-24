@@ -1,10 +1,8 @@
 package org.sparta.outsourcingproject.domain.review.repository;
 
 
-import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

@@ -96,4 +96,8 @@ public class OrdersService {
         Orders orders = ordersRepository.findByIdOrThrow(orderId);
         return orders.getOrdersProcess().equals(OrdersProcessEnum.DELIVERED);
     }
+
+    public Orders findOrders(Long orderId) {
+        return ordersRepository.findByIdOrThrow(orderId);
+    }
 }

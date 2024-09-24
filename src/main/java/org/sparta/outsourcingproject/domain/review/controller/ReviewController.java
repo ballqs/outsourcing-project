@@ -1,19 +1,17 @@
 package org.sparta.outsourcingproject.domain.review.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sparta.outsourcingproject.common.dto.ResponseDto;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewRequestDto;
-import org.sparta.outsourcingproject.domain.review.dto.ReviewResponseDto;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
-import org.sparta.outsourcingproject.domain.review.repository.ReviewRepository;
 import org.sparta.outsourcingproject.domain.review.service.ReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -23,12 +21,6 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final ReviewRepository reviewRepository;
-
-    public ReviewController(ReviewService reviewService, ReviewRepository reviewRepository) {
-        this.reviewService = reviewService;
-        this.reviewRepository = reviewRepository;
-    }
 
     @PostMapping("/review")
     public ResponseEntity<Review> saveReview(ReviewRequestDto reviewRequestDto) throws IllegalArgumentException {
