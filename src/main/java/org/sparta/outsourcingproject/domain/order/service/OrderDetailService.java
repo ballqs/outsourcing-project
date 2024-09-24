@@ -8,6 +8,7 @@ import org.sparta.outsourcingproject.domain.order.entity.OrderDetail;
 import org.sparta.outsourcingproject.domain.order.entity.Orders;
 import org.sparta.outsourcingproject.domain.order.repository.OrderDetailRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class OrderDetailService {
 
     private final OrderDetailRepository orderDetailRepository;
 
+    @Transactional
     public void orderComplete(Orders orders, List<CartDetail> cartDetails) {
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (CartDetail cartDetail : cartDetails) {

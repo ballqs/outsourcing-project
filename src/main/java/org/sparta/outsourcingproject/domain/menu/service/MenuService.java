@@ -10,6 +10,7 @@ import org.sparta.outsourcingproject.domain.menu.entity.Menu;
 import org.sparta.outsourcingproject.domain.menu.exception.AuthorityMismatchException;
 import org.sparta.outsourcingproject.domain.menu.exception.MenuAlreadyExistsException;
 import org.sparta.outsourcingproject.domain.menu.exception.MenuNotExistsException;
+import org.sparta.outsourcingproject.domain.menu.exception.MenuUnavailableException;
 import org.sparta.outsourcingproject.domain.menu.repository.MenuRepository;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.service.StoreService;
@@ -18,6 +19,7 @@ import org.sparta.outsourcingproject.domain.user.repository.UserRepository;
 import org.sparta.outsourcingproject.domain.user.service.UserCheckService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +63,7 @@ public class MenuService {
         }
 
         // 메뉴 내용을 변경 - dirty checking으로 자동 반영.
-        Menu updatedMenu = getMenu(storeId , menuId);
+        Menu updatedMenu = getMenu(storeId, menuId);
 
         updatedMenu.update(menuEditRequestDto);
 
@@ -115,7 +117,16 @@ public class MenuService {
         return store.getMenus();
     }
 
-    public Menu getMenu(Long storeId , Long menuId) {
-        return menuRepository.findByIdAndStoreId(menuId , storeId).orElseThrow(() -> new MenuNotExistsException(ErrorCode.MENU_NOTEXISTS_ERROR));
+    public Menu getMenu(Long storeId, Long menuId) {
+        // 메뉴 검색
+        Menu menu = menuRepository.findByIdAndStoreId(menuId, storeId).orElseThrow(() -> new MenuNotExistsException(ErrorCode.MENU_NOTEXISTS_ERROR));
+
+        // 품절 이거나 삭제된 메뉴
+        if(menu.isSoldOut() || !menu.isStatus()){
+            throw new MenuUnavailableException(ErrorCode.MENU_UNAVAILABLE_ERROR);
+        }
+
+        // 품절되지않았고, 삭제도되지않은 메뉴라면 리턴
+        return menu;
     }
 }

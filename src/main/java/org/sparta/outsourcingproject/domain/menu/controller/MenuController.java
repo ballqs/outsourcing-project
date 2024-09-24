@@ -10,6 +10,7 @@ import org.sparta.outsourcingproject.domain.menu.dto.request.MenuEditRequestDto;
 import org.sparta.outsourcingproject.domain.menu.dto.response.MenuEditResponseDto;
 import org.sparta.outsourcingproject.domain.menu.dto.request.MenuRequestDto;
 import org.sparta.outsourcingproject.domain.menu.dto.response.MenuResponseDto;
+import org.sparta.outsourcingproject.domain.menu.entity.Menu;
 import org.sparta.outsourcingproject.domain.menu.service.MenuService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,6 @@ public class MenuController {
             @PathVariable Long storeId,
             @PathVariable Long menuId) {
         menuService.deleteMenu(authUser.getUserId(), menuId, storeId);
-        return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , null , "메뉴가 수정되었습니다."));
+        return ResponseEntity.ok(new ResponseDto<>(HttpStatus.OK.value() , null , "메뉴가 삭제되었습니다."));
     }
 }

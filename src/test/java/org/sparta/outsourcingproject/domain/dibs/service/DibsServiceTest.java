@@ -14,6 +14,7 @@ import org.sparta.outsourcingproject.domain.store.dto.response.StoreResponseDto;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.enums.StoreOperationStatus;
 import org.sparta.outsourcingproject.domain.store.repository.StoreRepository;
+import org.sparta.outsourcingproject.domain.store.service.StoreService;
 import org.sparta.outsourcingproject.domain.user.entity.User;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -36,6 +37,9 @@ class DibsServiceTest {
     @Mock
     private StoreRepository storeRepository;
 
+    @Mock
+    private StoreService storeService;
+
     @InjectMocks
     private DibsService dibsService;
 
@@ -48,11 +52,10 @@ class DibsServiceTest {
         Dibs dibs = Dibs.CreateDibs(storeId, userId);
 
         when(dibsRepository.save(any(Dibs.class))).thenReturn(dibs);
-//        given(dibsRepository.save(any(Dibs.class))).willReturn(dibs);
+        when(storeService.findStore(storeId)).thenReturn(any(Store.class));
 
         // when
         DibsResponseDto result = dibsService.callDibs(storeId, userId);
-
 
         // then
         assertThat(result).isNotNull();
@@ -72,7 +75,6 @@ class DibsServiceTest {
 
         // when
         String result = dibsService.deleteDibs(storeId, userId);
-
 
         // then
         assertThat(result).isEqualTo("해당 가게를 찜 목록에서 삭제하였습니다.");

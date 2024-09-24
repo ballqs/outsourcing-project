@@ -36,8 +36,6 @@ public class Review extends Timestamped {
 
 //    public Review(Long storeId, Long orderId, int star, String contents) {
     public Review(Store store, Orders orders, int star, String contents) {
-//        this.storeId = storeId;
-//        this.orderId = orderId;
         this.store = store;
         this.orders = orders;
         this.star = star;

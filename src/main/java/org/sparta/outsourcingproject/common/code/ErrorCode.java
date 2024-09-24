@@ -10,6 +10,7 @@ public enum ErrorCode {
     AUTHORITY_MISMATCH_ERROR(HttpStatus.FORBIDDEN.value(), "올바른 권한을 보유하지 않았습니다."),
     MENU_ALREADYEXISTS_ERROR(HttpStatus.CONFLICT.value(), "중복된 메뉴입니다."),
     MENU_NOTEXISTS_ERROR(HttpStatus.NOT_FOUND.value(), "메뉴가 없습니다."),
+    MENU_UNAVAILABLE_ERROR(HttpStatus.NOT_FOUND.value(), "해당 메뉴는 품절되었거나 삭제되었습니다."),
 
     // 400
 
@@ -17,6 +18,8 @@ public enum ErrorCode {
     CONFLICT_DELIVERY_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST.value(), "이미 배달완료된 건입니다."),
     SAME_PASSWORD(HttpStatus.BAD_REQUEST.value(), "바꾸려는 비밀번호가 기존과 동일합니다."),
     UNSAME_INFORMATION(HttpStatus.BAD_REQUEST.value(), "정보가 일치하지 않습니다."),
+    ORDER_CANCELLED(HttpStatus.BAD_REQUEST.value(), "주문이 취소된 건입니다."),
+
     // 403
     MISMATCH_PASSWORD_ERROR(HttpStatus.FORBIDDEN.value(), "비밀번호가 일치하지 않습니다."),
     FORBIDDEN_CART_MODIFICATION(HttpStatus.FORBIDDEN.value(), "본인의 장바구니가 아닌 것은 수정 불가능합니다."),
@@ -24,6 +27,7 @@ public enum ErrorCode {
     FORBIDDEN_ORDER_STATUS_CHANGE(HttpStatus.FORBIDDEN.value(), "본인의 가게의 주문이 아니면 상태전환이 불가능합니다."),
     USER_NOT_ACTIVE_ERROR(HttpStatus.FORBIDDEN.value(), "사용자 비활성화 상태입니다."),
     FORBIDDEN_NO_PERMISSION(HttpStatus.FORBIDDEN.value() , "접근 권한이 없습니다."),
+    FORBIDDEN_CLOSED_STORE(HttpStatus.FORBIDDEN.value(), "운영 시간이 아닌 가게는 이용할 수 없습니다."),
 
     // 404
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 ID를 가진 가게를 찾을 수 없습니다"),

@@ -26,7 +26,7 @@ import java.util.List;
 @Table(name = "store")
 @Getter
 @Slf4j
-@NoArgsConstructor
+@NoArgsConstructor // 팀원들 테스트 코드 용이성 위해 protected 해제
 public class Store extends Timestamped {
 
     @Id
@@ -58,7 +58,7 @@ public class Store extends Timestamped {
     @Enumerated(EnumType.STRING)
     private StoreOperationStatus operationStatus; // OPERATION(정상 영업), SHUTDOWN(폐점)
 
-    @Column(precision = 2, scale = 1, nullable = false)  // DECIMAL(3,2)와 매핑
+    @Column(precision = 2, scale = 1, nullable = false)  // 평점 소수점 1자리 수까지 표시
     private BigDecimal rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -94,31 +94,6 @@ public class Store extends Timestamped {
         return createdStore;
     }
 
-    //=====연관관계 메서드========//
-
-//    public void setUser(User user) {
-//        this.user = user;
-//        user.getStores().add(this);
-//    }
-//
-//    public void addReview(Review review) {
-//        reviews.add(review);
-//        review.setReview(this);
-//    }
-//
-//    public void addOrder(Orders orders) {
-//        orderList.add(orders);
-//        orders.setStore(this);
-//    }
-//
-//    public void addMenu(Menu menu) {
-//        menus.add(menu);
-//        menu.setStore(this);
-//    }
-
-    // ===================== //
-
-
     // 현재 시간이 openTime과 closeTime 사이인지 확인
     public boolean isCurrentlyOpened() {
         LocalTime now = LocalTime.now();
@@ -141,36 +116,63 @@ public class Store extends Timestamped {
         }
     }
 
-    // 평점 업데이트 메서드
+    // 가게 평점 업데이트 메서드
 //    public void updateAverageRating() {
 //        // 리뷰가 없을 경우 0으로 처리
 //        if (reviews.isEmpty()) {
-//            this.rating = BigDecimal.ZERO;  // 평점 0으로 설정
+//            this.rating = BigDecimal.ZERO;
 //            return;
 //        }
 //
 //        // 리뷰 평점 합계
 //        BigDecimal totalRating = reviews.stream()
-//                .map(Review::getRating)  // 각 리뷰의 평점 가져오기
+//                .map(review -> BigDecimal.valueOf(review.getStar()))  // 각 리뷰의 평점을 BigDecimal로 변환
 //                .reduce(BigDecimal.ZERO, BigDecimal::add);  // 평점 합산
 //
-////         평균 계산 (평점의 합을 리뷰 개수로 나누기)
+//        // 평균 계산 (평점의 합을 리뷰 개수로 나누기)
 //        BigDecimal averageRating = totalRating.divide(
 //                BigDecimal.valueOf(reviews.size()),  // 리뷰 개수
-//                2,  // 소수점 2자리로 설정
-//                RoundingMode.HALF_UP  // 반올림 모드
+//                1,  // 소수점 1자리로 설정
+//                RoundingMode.HALF_UP  // 반올림
 //        );
 //
 //        // 가게의 평점 업데이트
 //        this.rating = averageRating;
 //    }
 
+
+    // 가게 평점 업데이트 메서드
+    public void updateAverageRating() {
+        // 리뷰가 없을 경우 0으로 처리
+        if (reviews.isEmpty()) {
+            this.rating = BigDecimal.ZERO;
+            return;
+        }
+
+        // 리뷰 평점 합계
+        BigDecimal totalRating = reviews.stream()
+                .map(review -> BigDecimal.valueOf(review.getStar()))  // 각 리뷰의 평점을 BigDecimal로 변환
+                .reduce(BigDecimal.ZERO, BigDecimal::add);  // 평점 합산
+
+        // 평균 계산 (평점의 합을 리뷰 개수로 나누기)
+        BigDecimal averageRating = totalRating.divide(
+                BigDecimal.valueOf(reviews.size()),  // 리뷰 개수
+                1,  // 소수점 1자리로 설정
+                RoundingMode.HALF_UP  // 반올림
+        );
+
+        // 가게의 평점 업데이트
+        this.rating = averageRating;
+    }
+
+
+
     // 가게 폐업
     public void setStoreShutdown() {
         this.operationStatus = StoreOperationStatus.SHUTDOWN;
     }
 
-    // 가게 정보 수정
+    // 가게 정보 수정(patch 데이터 미입력시 null값 체크)
     public void updateStoreInfo(StoreUpdateRequestDto requestDto) {
         this.name = requestDto.getName() != null ? requestDto.getName() : this.name;
         this.category = requestDto.getCategory() != null ? requestDto.getCategory() : this.category;
@@ -180,8 +182,6 @@ public class Store extends Timestamped {
         this.minPrice = requestDto.getMinPrice() != null ? requestDto.getMinPrice() : this.minPrice;
         this.address = requestDto.getAddress() != null ? requestDto.getAddress() : this.address;  // 기존 값 유지
     }
-
-
 }
 
 
