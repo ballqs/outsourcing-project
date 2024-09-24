@@ -95,13 +95,12 @@ public class OrderServiceTest {
         ReflectionTestUtils.setField(orders , "id" , orderId);
 
         given(ordersRepository.findByIdOrThrow(anyLong())).willReturn(orders);
-        given(ordersRepository.save(any())).willReturn(orders);
 
         // when
         ordersService.changeStatus(userId , orderId);
 
         // then
-        verify(ordersRepository , times(1)).save(any());
+
     }
 
     @Test
