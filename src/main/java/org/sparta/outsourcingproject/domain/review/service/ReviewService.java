@@ -37,6 +37,9 @@ public class ReviewService {
             throw new IllegalArgumentException("배달 완료된 주문만 리뷰 작성이 가능합니다.");
         }
 
+        // 별점 검사
+        reviewRequestDto.validateRating();
+
         // 리뷰 엔티티로 변환
         Review review = new Review(
                 reviewRequestDto.getStoreId(),

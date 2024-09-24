@@ -25,7 +25,7 @@ public class ReviewRequestDto {
         if (orderId == null) throw new IllegalArgumentException("주문 번호가 존재하지 않습니다.\n 다시 입력해주세요");
 
         String comment = this.comment;
-        if (comment.isBlank() && comment.length() < 10) throw new IllegalArgumentException("리뷰가 너무 짧습니다. 다시 작성해주세요.");
+        if (comment.isBlank() && comment.length() < 10) throw new IllegalArgumentException("리뷰가 너무 짧습니다. 10글자 이상 작성해주세요.");
     }
 
 }
