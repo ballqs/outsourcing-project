@@ -8,6 +8,7 @@ import org.sparta.outsourcingproject.common.dto.ResponseDto;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewRequestDto;
 import org.sparta.outsourcingproject.domain.review.dto.ReviewResponseDto;
 import org.sparta.outsourcingproject.domain.review.entity.Review;
+import org.sparta.outsourcingproject.domain.review.repository.ReviewRepository;
 import org.sparta.outsourcingproject.domain.review.service.ReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +23,21 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final ReviewRepository reviewRepository;
 
-//    public ReviewController(ReviewService reviewService) {
-//        this.reviewService = reviewService;
-//    }
+    public ReviewController(ReviewService reviewService, ReviewRepository reviewRepository) {
+        this.reviewService = reviewService;
+        this.reviewRepository = reviewRepository;
+    }
 
-//    @PostMapping("/{userId}")
-//    public ReviewResponseDto saveReview(@RequestBody ReviewRequestDto reviewRequestDto) {
-//
-//        return reviewService.saveReview(reviewRequestDto);
-//    }
+    @PostMapping("/review")
+    public ResponseEntity<Review> saveReview(ReviewRequestDto reviewRequestDto) throws IllegalArgumentException {
+        reviewRequestDto.validateFields();
+
+        Review review = reviewService.saveReview(reviewRequestDto);
+        return ResponseEntity.ok(review);
+    }
+
 
     @GetMapping("/reviews")
     public ResponseEntity<ResponseDto<List<Review>>> getReviews(
