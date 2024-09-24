@@ -26,7 +26,7 @@ public enum ErrorCode {
 
     // 404
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 ID를 가진 가게를 찾을 수 없습니다"),
-    USER_NOT_FIND_ERROR(HttpStatus.NOT_FOUND.value(), "유저가 없습니다."),
+    USER_NOT_FIND_ERROR(HttpStatus.NOT_FOUND.value(), "로그인 할 수 없습니다."),
     CART_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "장바구니 정보가 없습니다."),
     CART_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "장바구니 상세 정보가 없습니다."),
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "해당 주문이 없습니다."),
