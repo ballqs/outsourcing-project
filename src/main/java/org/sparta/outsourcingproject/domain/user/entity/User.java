@@ -1,6 +1,5 @@
 package org.sparta.outsourcingproject.domain.user.entity;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +48,9 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private boolean status;
 
+    @Column(nullable = false)
+    private int state; //비밀번호를 틀릴때마다 1씩 증가
+    private boolean protect;
     @OneToMany(mappedBy = "user" , orphanRemoval = true)
     private List<Store> storeList = new ArrayList<>();
 
@@ -68,6 +70,8 @@ public class User extends Timestamped {
         this.phoneNumber = requestDto.getPhoneNumber();
         this.authority = requestDto.getAuthority();
         this.status = true;
+        this.state = 0;
+        this.protect = false;
     }
 
     public void delete() {
@@ -75,12 +79,22 @@ public class User extends Timestamped {
     }
 
     public void update(String pw, PatchUserRequestDto requestDto) {
-
-        this.name = String.valueOf(requestDto.getAuthority() != null ? requestDto.getAuthority() : this.authority);
+        this.authority = requestDto.getAuthority() != null ? requestDto.getAuthority() : this.authority;
         this.phoneNumber = requestDto.getPhoneNumber() != null ? requestDto.getPhoneNumber() : this.phoneNumber;
         this.addressDetail = requestDto.getAddressDetail() != null ? requestDto.getAddressDetail() : this.addressDetail;
         this.zip = requestDto.getZip() != null ? requestDto.getZip() : this.zip;
         this.address = requestDto.getAddress() != null ? requestDto.getAddress() : this.address;
         this.pw = requestDto.getPw() != null ? pw : this.pw;
+    }
+
+    public void missMatchByIncrementState() {
+        this.state++;
+        if (this.state >= 5 && !this.protect){
+            changeProtect();
+        }
+    }
+
+    public void changeProtect(){
+        this.protect = !protect;
     }
 }

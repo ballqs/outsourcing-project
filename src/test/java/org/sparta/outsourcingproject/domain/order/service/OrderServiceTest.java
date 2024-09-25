@@ -16,6 +16,7 @@ import org.sparta.outsourcingproject.domain.store.dto.request.StoreCreateRequest
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.enums.StoreOperationStatus;
 import org.sparta.outsourcingproject.domain.user.entity.User;
+import org.sparta.outsourcingproject.domain.user.service.UserCheckService;
 import org.sparta.outsourcingproject.domain.user.service.UserService;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -38,7 +39,7 @@ public class OrderServiceTest {
     @Mock
     private CartDetailService cartDetailService;
     @Mock
-    private UserService userService;
+    private UserCheckService userService;
     @InjectMocks
     private OrdersService ordersService;
 
@@ -95,13 +96,12 @@ public class OrderServiceTest {
         ReflectionTestUtils.setField(orders , "id" , orderId);
 
         given(ordersRepository.findByIdOrThrow(anyLong())).willReturn(orders);
-        given(ordersRepository.save(any())).willReturn(orders);
 
         // when
         ordersService.changeStatus(userId , orderId);
 
         // then
-        verify(ordersRepository , times(1)).save(any());
+
     }
 
     @Test

@@ -19,6 +19,7 @@ import org.sparta.outsourcingproject.domain.store.enums.StoreStatus;
 import org.sparta.outsourcingproject.domain.store.repository.StoreRepository;
 import org.sparta.outsourcingproject.domain.user.Authority;
 import org.sparta.outsourcingproject.domain.user.entity.User;
+import org.sparta.outsourcingproject.domain.user.service.UserCheckService;
 import org.sparta.outsourcingproject.domain.user.service.UserService;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -40,7 +41,7 @@ import static org.mockito.Mockito.*;
 public class StoreServiceTest {
 
     @Mock
-    private UserService userService;
+    private UserCheckService userService;
 
     @Mock
     private StoreRepository storeRepository;

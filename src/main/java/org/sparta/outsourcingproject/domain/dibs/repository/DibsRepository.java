@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface DibsRepository extends JpaRepository <Dibs, DibsId>{
 
-
     List<Dibs> findByIdUserId(Long userId);
 
     // DELETE FROM dibs WHERE store_id = ? AND user_id = ?;

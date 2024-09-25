@@ -11,9 +11,4 @@ public class CartDetailUpdateDto {
 
     @Positive
     private int cnt;
-
-    // 추가
-    @NotNull
-    private Long storeId;
-
 }

@@ -196,7 +196,6 @@ class CartControllerTest {
     @Test
     public void 장바구니_수정_완료() throws Exception {
         // given
-        long storeId = 1L;
         long menuId = 1L;
         int cnt = 1;
 
@@ -205,7 +204,6 @@ class CartControllerTest {
         CartDetailUpdateDto requestDto = new CartDetailUpdateDto();
         ReflectionTestUtils.setField(requestDto , "menuId" , menuId);
         ReflectionTestUtils.setField(requestDto , "cnt" , cnt);
-        ReflectionTestUtils.setField(requestDto , "storeId" , storeId);
 
         String postInfo = objectMapper.writeValueAsString(requestDto);
 
@@ -226,7 +224,6 @@ class CartControllerTest {
     @Test
     public void 장바구니_수정_실패_메뉴_번호_없음() throws Exception {
         // given
-        long storeId = 1L;
         int cnt = 1;
 
         long cartDetailId = 1L;
@@ -234,7 +231,6 @@ class CartControllerTest {
         CartDetailUpdateDto requestDto = new CartDetailUpdateDto();
         ReflectionTestUtils.setField(requestDto , "menuId" , null);
         ReflectionTestUtils.setField(requestDto , "cnt" , cnt);
-        ReflectionTestUtils.setField(requestDto , "storeId" , storeId);
 
         String postInfo = objectMapper.writeValueAsString(requestDto);
 
@@ -256,43 +252,12 @@ class CartControllerTest {
     public void 장바구니_수정_실패_메뉴_개수_없음() throws Exception {
         // given
         long menuId = 1L;
-        long storeId = 1L;
 
         long cartDetailId = 1L;
 
         CartDetailUpdateDto requestDto = new CartDetailUpdateDto();
         ReflectionTestUtils.setField(requestDto , "menuId" , menuId);
         ReflectionTestUtils.setField(requestDto , "cnt" , 0);
-        ReflectionTestUtils.setField(requestDto , "storeId" , storeId);
-
-        String postInfo = objectMapper.writeValueAsString(requestDto);
-
-        doNothing().when(cartService).updateCart(anyLong(), anyLong() , any());
-
-        // when
-        ResultActions resultActions = mvc.perform(patch("/api/cart/{cartDetailId}" , cartDetailId)
-                .header(HttpHeaders.AUTHORIZATION , token)
-                .content(postInfo)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-        );
-
-        // then
-        resultActions.andExpect(status().isBadRequest()).andDo(print());
-    }
-
-    @Test
-    public void 장바구니_수정_실패_가게_번호_없음() throws Exception {
-        // given
-        long menuId = 1L;
-        int cnt = 1;
-
-        long cartDetailId = 1L;
-
-        CartDetailUpdateDto requestDto = new CartDetailUpdateDto();
-        ReflectionTestUtils.setField(requestDto , "menuId" , menuId);
-        ReflectionTestUtils.setField(requestDto , "cnt" , cnt);
-        ReflectionTestUtils.setField(requestDto , "storeId" , null);
 
         String postInfo = objectMapper.writeValueAsString(requestDto);
 

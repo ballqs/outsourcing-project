@@ -12,12 +12,15 @@ import org.sparta.outsourcingproject.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encode;
     private final JwtUtil jwtUtil;
+    private final UserCheckService userCheckService;
 
     //회원가입 signUp
     public void signUpUser(PostUserSignUpRequestDto postUserSignUpRequestDto) {
@@ -26,7 +29,7 @@ public class UserService {
         if (overlap) {
             throw new DuplicateEmailException(ErrorCode.DUPLICATE_EMAIL_ERROR);
         }
-
+        userCheckService.checkHp(postUserSignUpRequestDto.getPhoneNumber());
         //비밀번호 벨류체크
         if(!encode.passwordVerification(postUserSignUpRequestDto.getPw())){
             throw new IllegalArgumentException("올바르지 않은 비밀번호 형식입니다.");
@@ -39,14 +42,15 @@ public class UserService {
     }
 
     //로그인
+    @Transactional(noRollbackFor = MismatchPasswordException.class)
     public String signInUser(PostUserSignInRequestDto postUserSignUpRequestDto) {
-        String email = postUserSignUpRequestDto.getEmail();
-        String pw = postUserSignUpRequestDto.getPw();
 
-        User user = findByEmailUser(email);
+        User user = userCheckService.findByEmailUser(postUserSignUpRequestDto.getEmail());
 
-        checkPw(pw, user.getPw());
-        checkStatus(user);
+        userCheckService.checkPw(postUserSignUpRequestDto.getPw(), user.getPw(), user.getId());
+
+        userCheckService.checkStatus(user);
+
         return jwtUtil.createToken(user.getId(), user.getEmail(),user.getAuthority());
     }
 
@@ -54,11 +58,11 @@ public class UserService {
     @Transactional
     public void deleteUser(AuthUser authUser, DeleteUserRequestDto deleteReqestDto) {
         Long id = authUser.getUserId();
-        User user = findUser(id);
+        User user = userCheckService.findUser(id);
 
         //비밀번호 체크
         String pw= deleteReqestDto.getPw();
-        checkPw(pw, user.getPw());
+        userCheckService.checkPw(pw, user.getPw(), user.getId());
         //유저 비활성화 코드
         user.delete();
     }
@@ -67,10 +71,10 @@ public class UserService {
     @Transactional
     public void updateUser(AuthUser authUser, PatchUserRequestDto requestDto){
         Long id = authUser.getUserId();
-        User user = findUser(id);
+        User user = userCheckService.findUser(id);
 
         String pw= requestDto.getPw();
-        checkPw(pw, user.getPw());
+        userCheckService.checkPw(pw, user.getPw(), user.getId());
 
         if(!encode.passwordVerification(requestDto.getPw())){
             throw new IllegalArgumentException("올바르지 않은 비밀번호 형식입니다.");
@@ -80,47 +84,22 @@ public class UserService {
             throw new SamePasswordException(ErrorCode.SAME_PASSWORD);
         }
         //중복된 핸드폰번호 일 경우 예외
-        checkHp(requestDto.getPhoneNumber());
+        userCheckService.checkHp(requestDto.getPhoneNumber());
+
         String encodePw = encode.encode(requestDto.getNewPw());
         user.update(encodePw,requestDto);
     }
 
-    //회원조회
-    public GetProfileResponseDto getProfile(AuthUser authUser) {
-        Long id = authUser.getUserId();
-        User user = findUser(id);
-        return new GetProfileResponseDto(user);
-    }
-
-    //id를 사용한 유저 찾기
-    public User findUser(Long userId) {
-        return userRepository.findByIdAndStatusTrue(userId)
-                .orElseThrow(() -> new UserNotFindException(ErrorCode.USER_NOT_FIND_ERROR));
-    }
-
-    //email값에 맞는 동일한 유저 찾기
-    public User findByEmailUser(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFindException(ErrorCode.DUPLICATE_EMAIL_ERROR));
-    }
-
-    //pw가 틀렸을때 예외처리
-    private void checkPw(String userPw, String enPw) {
-        if (!encode.matches(userPw, enPw)) {
-            throw new MismatchPasswordException(ErrorCode.MISMATCH_PASSWORD_ERROR);
+    //계정 잠금 해제
+    @Transactional
+    public void recoveryUser(PostUserRecoveryRequestDto requestDto) {
+        //이메일에 맞는 유저 찾기
+        User user = userCheckService.findByEmailUser(requestDto.getEmail());
+        //유저의 핸드폰번호와 입력 받은 핸드폰번호가 동일한지 체크
+        if (!user.getPhoneNumber().equals(requestDto.getPhoneNumber())) {
+            throw new UnSamePhoneNumberException(ErrorCode.UNSAME_INFORMATION);
         }
-    }
-
-    //핸드폰번호 중복일때 사용하는 예외 처리
-    private void checkHp(String hp){
-        if(userRepository.findByPhoneNumber(hp)){
-            throw new DuplicatePhoneNumberException(ErrorCode.DUPLICATE_PHONE_NUMBER_ERROR);
-        }
-    }
-
-    //회원 탈퇴 상태일때 로그인시도 예외처리
-    private void checkStatus(User user){
-        if(!user.isStatus()){
-            throw new UserNotActiveException(ErrorCode.USER_NOT_FIND_ERROR);
-        }
+        //동일하면 protect값 바꿔주기
+        user.changeProtect();
     }
 }

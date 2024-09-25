@@ -14,16 +14,14 @@ import org.sparta.outsourcingproject.domain.menu.exception.MenuUnavailableExcept
 import org.sparta.outsourcingproject.domain.menu.repository.MenuRepository;
 import org.sparta.outsourcingproject.domain.store.entity.Store;
 import org.sparta.outsourcingproject.domain.store.service.StoreService;
-import org.sparta.outsourcingproject.domain.user.Authority;
 import org.sparta.outsourcingproject.domain.user.entity.User;
 import org.sparta.outsourcingproject.domain.user.repository.UserRepository;
-import org.sparta.outsourcingproject.domain.user.service.UserService;
+import org.sparta.outsourcingproject.domain.user.service.UserCheckService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -32,7 +30,7 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final UserCheckService userCheckService;
     private final StoreService storeService;
 
     @Transactional
@@ -57,7 +55,7 @@ public class MenuService {
     @Transactional
     public MenuEditResponseDto updateMenu(Long userId, MenuEditRequestDto menuEditRequestDto, Long storeId, Long menuId) {
         // 메뉴 수정은 사장님만 가능.
-        User user = userService.findUser(userId);
+        User user = userCheckService.findUser(userId);
 
         // 수정할 메뉴 존재 유무 확인.
         if (!menuRepository.existsById(menuId)) {
