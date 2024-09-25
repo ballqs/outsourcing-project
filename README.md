@@ -71,7 +71,7 @@
 ## ☁ 와이어프레임
 https://www.figma.com/file/onGfiOKoB3fKJr75vYb4tL?type=design%27&node-id=0:1&mode=design
 ## ☁ ERD 다이어그램
-![image](https://github.com/user-attachments/assets/e9348aeb-368f-409b-9a30-ac0ec2709eb3)
+![image](https://github.com/user-attachments/assets/ca11bb57-ad8a-429e-a3be-748d768bb41c)
 
 ## 📑 API 명세서
 ![api1](https://github.com/user-attachments/assets/833fd8bc-9e07-45e1-9c67-afd31528d644)
